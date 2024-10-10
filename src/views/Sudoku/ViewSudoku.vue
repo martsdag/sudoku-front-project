@@ -9,8 +9,9 @@
 </template>
 
 <script setup lang="ts">
+import { Difficulty } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
 
 const sudokuStore = useSudokuStore();
-sudokuStore.getSudoku(...[], undefined, 'easy');
+sudokuStore.getSudoku(undefined, Difficulty.Easy);
 </script>
