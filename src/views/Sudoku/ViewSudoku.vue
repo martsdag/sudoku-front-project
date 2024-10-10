@@ -4,28 +4,13 @@
     <div>
       <h2>Puzzle:</h2>
       <pre>{{ sudokuStore.sudoku?.puzzle }}</pre>
-      <h2>Solution:</h2>
-      <pre>{{ sudokuStore.sudoku?.solution }}</pre>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { onMounted } from 'vue';
-
+<script setup lang="ts">
 import { useSudokuStore } from '@/stores/sudoku';
 
-export default {
-  setup() {
-    const sudokuStore = useSudokuStore();
-
-    onMounted(() => {
-      sudokuStore.loadSudoku();
-    });
-
-    return {
-      sudokuStore,
-    };
-  },
-};
+const sudokuStore = useSudokuStore();
+sudokuStore.getSudoku(...[], undefined, 'easy');
 </script>

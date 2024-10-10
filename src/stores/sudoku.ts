@@ -1,17 +1,16 @@
 import { defineStore } from 'pinia';
 import { useAsyncState } from '@vueuse/core';
 
-import { getSudoku } from '@/api/sudoku';
+import { _getSudoku, type Difficulty } from '@/api/sudoku';
 
 export const useSudokuStore = defineStore('sudoku', () => {
   const {
-    execute: loadSudoku,
-    isLoading: isLoadingSudoku,
+    execute: getSudoku,
+    isLoading: isLoadingGetSudoku,
     state: sudoku,
   } = useAsyncState(
-    async (difficulty = 'easy', format = 'string') => {
-      const result = await getSudoku(difficulty, format);
-      return result;
+    async (difficulty: Difficulty) => {
+      return _getSudoku(difficulty);
     },
     null,
     {
@@ -21,7 +20,7 @@ export const useSudokuStore = defineStore('sudoku', () => {
 
   return {
     sudoku,
-    loadSudoku,
-    isLoadingSudoku,
+    getSudoku,
+    isLoadingGetSudoku,
   };
 });
