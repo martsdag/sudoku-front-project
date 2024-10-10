@@ -12,7 +12,7 @@ export interface Sudoku {
   solution: string;
 }
 
-export const _getSudoku = (difficulty: Difficulty) =>
+export const getSudoku = (difficulty: Difficulty) =>
   client<Sudoku>(`/sudoku`, {
     params: { difficulty },
   });
