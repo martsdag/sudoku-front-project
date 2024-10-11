@@ -1,12 +1,21 @@
 <template>
   <div>
-    <div class="grid">
-      <div v-for="(box, boxIndex) in boxes" :key="boxIndex" class="box">
-        <div v-for="(cell, cellIndex) in box" :key="cellIndex" class="cell">
-          {{ cell }}
-        </div>
-      </div>
-    </div>
+    <table class="sudoku-table">
+      <tbody>
+        <tr v-for="(box, boxIndex) in boxes" :key="boxIndex">
+          <td v-for="(cell, cellIndex) in box" :key="cellIndex" class="cell">
+            <input
+              v-if="cell === ''"
+              type="text"
+              maxlength="1"
+              class="cell-input"
+              @input="(event) => updateCell(boxIndex, cellIndex, (event.target as HTMLInputElement).value)"
+            />
+            <span v-else>{{ cell }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -32,32 +41,53 @@ const boxes = computed(() => {
   }
   return grid;
 });
+
+const updateCell = (boxIndex: number, cellIndex: number, value: string) => {
+  if (value.match(/^[1-9]$/) || value === '') {
+    const puzzle = sudokuStore.sudoku?.puzzle.split('');
+    if (puzzle) {
+      puzzle[boxIndex * 9 + cellIndex] = value;
+    }
+  }
+};
 </script>
 
 <style lang="css">
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.sudoku-table {
+  border-collapse: collapse;
+  margin-top: 200px;
   width: 600px;
   height: 600px;
-  margin-top: 200px;
   background-color: white;
-}
-
-.box {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-  border: 1px solid #000;
+  border-left: 2px solid #000;
+  border-top: 2px solid #000;
 }
 
 .cell {
   width: 60px;
   height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px dotted #e9ecef;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  vertical-align: middle;
   font-size: 50px;
+  position: relative;
+}
+
+.cell-input {
+  width: 100%;
+  height: 100%;
+  font-size: 50px;
+  text-align: center;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.cell:nth-child(3n) {
+  border-right: 2px solid #000;
+}
+
+tr:nth-child(3n) .cell {
+  border-bottom: 2px solid #000;
 }
 </style>
