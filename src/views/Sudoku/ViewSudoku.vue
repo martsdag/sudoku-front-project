@@ -55,28 +55,28 @@ const updateCell = (boxIndex: number, cellIndex: number, value: string) => {
 <style lang="css">
 .sudoku-table {
   border-collapse: collapse;
-  margin-top: 200px;
-  width: 600px;
-  height: 600px;
+  width: 100%;
+  height: auto;
   background-color: white;
   border-left: 2px solid #000;
   border-top: 2px solid #000;
+  margin-top: 200px;
 }
 
 .cell {
-  width: 60px;
-  height: 60px;
+  width: 35px;
+  height: 35px;
   border: 1px solid #e9ecef;
   text-align: center;
   vertical-align: middle;
-  font-size: 50px;
+  font-size: 24px;
   position: relative;
 }
 
 .cell-input {
   width: 100%;
   height: 100%;
-  font-size: 50px;
+  font-size: 24px;
   text-align: center;
   border: none;
   outline: none;
@@ -89,5 +89,39 @@ const updateCell = (boxIndex: number, cellIndex: number, value: string) => {
 
 tr:nth-child(3n) .cell {
   border-bottom: 2px solid #000;
+}
+
+@media (min-width: 768px) {
+  .sudoku-table {
+    width: 450px;
+    height: 450px;
+  }
+
+  .cell {
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+  }
+
+  .cell-input {
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sudoku-table {
+    width: 600px;
+    height: 600px;
+  }
+
+  .cell {
+    width: 60px;
+    height: 60px;
+    font-size: 40px;
+  }
+
+  .cell-input {
+    font-size: 40px;
+  }
 }
 </style>
