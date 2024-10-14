@@ -57,9 +57,7 @@ const updateCell = (boxIndex: number, cellIndex: number, value: string) => {
   border-collapse: collapse;
   width: 100%;
   height: auto;
-  background-color: white;
-  border-left: 2px solid #000;
-  border-top: 2px solid #000;
+  background-color: #ffffff;
   margin-top: 200px;
 }
 
@@ -81,6 +79,14 @@ const updateCell = (boxIndex: number, cellIndex: number, value: string) => {
   border: none;
   outline: none;
   background: transparent;
+}
+
+.cell:first-child {
+  border-left: 2px solid #000;
+}
+
+tr:first-child .cell {
+  border-top: 2px solid #000;
 }
 
 .cell:nth-child(3n) {
