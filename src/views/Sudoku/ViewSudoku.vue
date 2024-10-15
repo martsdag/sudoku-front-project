@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sudoku-container">
     <table class="sudoku-grid">
       <tbody>
         <tr v-for="(box, boxIndex) in model" :key="boxIndex">
@@ -42,13 +42,18 @@ sudokuStore.getSudoku(undefined, Difficulty.Easy).then((sudoku) => {
 </script>
 
 <style>
+.sudoku-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 .sudoku-grid {
   border-collapse: collapse;
   width: 100%;
   max-width: 320px;
   margin: 0 auto;
   background-color: #ffffff;
-  margin-top: 200px;
 }
 
 .sudoku-grid-cell {
@@ -90,7 +95,6 @@ tr:nth-child(3n) .sudoku-grid-cell {
 @media (min-width: 768px) {
   .sudoku-grid {
     max-width: 450px;
-    margin-top: 150px;
   }
 
   .sudoku-grid-cell {
@@ -107,7 +111,6 @@ tr:nth-child(3n) .sudoku-grid-cell {
 @media (min-width: 1024px) {
   .sudoku-grid {
     max-width: 600px;
-    margin-top: 200px;
   }
 
   .sudoku-grid-cell {
