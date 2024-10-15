@@ -8,7 +8,7 @@ export const useSudokuStore = defineStore('sudoku', () => {
     execute: getSudoku,
     isLoading: isLoadingGetSudoku,
     state: sudoku,
-  } = useAsyncState((...[difficulty]: Parameters<typeof _getSudoku>) => _getSudoku(difficulty), null, {
+  } = useAsyncState(_getSudoku, null, {
     immediate: false,
   });
 

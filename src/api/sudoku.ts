@@ -14,5 +14,5 @@ export interface Sudoku {
 
 export const getSudoku = (difficulty: Difficulty) =>
   client<Sudoku>(`/sudoku`, {
-    params: { difficulty },
+    params: { difficulty, format: 'matrix' },
   });
