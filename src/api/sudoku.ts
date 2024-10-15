@@ -8,8 +8,8 @@ export enum Difficulty {
 }
 
 export interface Sudoku {
-  puzzle: string;
-  solution: string;
+  puzzle: string[][];
+  solution: string[][];
 }
 
 export const getSudoku = (difficulty: Difficulty) =>

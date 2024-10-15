@@ -8,9 +8,13 @@ export const useSudokuStore = defineStore('sudoku', () => {
     execute: getSudoku,
     isLoading: isLoadingGetSudoku,
     state: sudoku,
-  } = useAsyncState(_getSudoku, null, {
-    immediate: false,
-  });
+  } = useAsyncState(
+    _getSudoku,
+    { puzzle: [], solution: [] },
+    {
+      immediate: false,
+    },
+  );
 
   return {
     sudoku,
