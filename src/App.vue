@@ -6,7 +6,7 @@
 
 <script setup lang="ts"></script>
 
-<style lang="css">
+<style>
 .app {
   display: flex;
   flex-direction: column;

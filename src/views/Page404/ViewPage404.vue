@@ -14,7 +14,7 @@
 import { RouteName } from '@/router';
 </script>
 
-<style lang="css">
+<style>
 .container {
   max-width: 75rem;
   width: 90%;
