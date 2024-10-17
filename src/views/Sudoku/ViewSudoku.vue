@@ -1,22 +1,28 @@
 <template>
-  <div class="sudoku-container">
-    <table class="sudoku-grid">
-      <tbody>
-        <tr v-for="(box, boxIndex) in model" :key="boxIndex">
-          <td v-for="(cell, cellIndex) in box" :key="cellIndex" class="sudoku-grid-cell">
-            <input
-              v-if="cell === ''"
-              v-model="model[boxIndex][cellIndex]"
-              type="text"
-              maxlength="1"
-              class="sudoku-grid-cell-input"
-              @input="(event) => updateCell(boxIndex, cellIndex, (event.target as HTMLInputElement).value)"
-            />
-            <span v-else>{{ cell }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div>
+    <BaseButton :label="`Current difficulty level: ${selectedDifficulty}`" @click="openModal" />
+    <div class="sudoku-container">
+      <table class="sudoku-grid">
+        <tbody>
+          <tr v-for="(box, boxIndex) in model" :key="boxIndex">
+            <td v-for="(cell, cellIndex) in box" :key="cellIndex" class="sudoku-grid-cell">
+              <input
+                v-if="cell === ''"
+                v-model="model[boxIndex][cellIndex]"
+                type="text"
+                maxlength="1"
+                class="sudoku-grid-cell-input"
+                @input="(event) => updateCell(boxIndex, cellIndex, (event.target as HTMLInputElement).value)"
+              />
+              <span v-else>{{ cell }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <BaseModal ref="baseModal">
+      <BaseDifficultySelector v-model="selectedDifficulty" />
+    </BaseModal>
   </div>
 </template>
 
@@ -25,10 +31,20 @@ import { ref } from 'vue';
 
 import { Difficulty } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
+import BaseModal from '@/components/ui/BaseModal.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseDifficultySelector from '@/components/BaseDifficultySelector.vue';
 
 const sudokuStore = useSudokuStore();
 
 const model = ref<string[][]>([]);
+const baseModal = ref();
+
+const selectedDifficulty = ref('Easy');
+
+const openModal = () => {
+  baseModal.value.open();
+};
 
 const updateCell = (boxIndex: number, cellIndex: number, value: string) => {
   if (value.match(/^[1-9]$/) || value === '') {
@@ -46,7 +62,6 @@ sudokuStore.getSudoku(undefined, Difficulty.Easy).then((sudoku) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
 }
 .sudoku-grid {
   border-collapse: collapse;
@@ -122,5 +137,13 @@ tr:nth-child(3n) .sudoku-grid-cell {
   .sudoku-grid-cell-input {
     font-size: 40px;
   }
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input[type='radio'] {
+  margin-right: 8px;
 }
 </style>
