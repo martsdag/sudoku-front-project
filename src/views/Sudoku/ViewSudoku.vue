@@ -14,6 +14,6 @@ const sudokuStore = useSudokuStore();
 const model = ref<string[][]>([]);
 
 sudokuStore.getSudoku(undefined, Difficulty.Easy).then((sudoku) => {
-  model.value = sudoku.puzzle.map((row) => row.map((cell) => (cell === '-' ? '' : cell)));
+  model.value = sudoku.puzzle;
 });
 </script>
