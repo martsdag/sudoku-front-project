@@ -1,7 +1,10 @@
 import type { Component } from 'vue';
+
 import { createRouter, createWebHistory, type NavigationGuard } from 'vue-router';
 
 import LayoutDefault from '@/layouts/Default';
+import { Difficulty } from '@/api/sudoku';
+import { isDifficulty } from '@/helpers/isDifficulty';
 
 export enum LayoutName {
   Default = 'Default',
@@ -25,6 +28,19 @@ export const router = createRouter({
       name: RouteName.Sudoku,
       path: '/sudoku',
       component: () => import('@/views/Sudoku'),
+      beforeEnter: (to) => {
+        if (isDifficulty(to.query.difficulty)) {
+          return;
+        }
+
+        return {
+          path: to.path,
+          query: {
+            ...to.query,
+            difficulty: Difficulty.Easy,
+          },
+        };
+      },
     },
     {
       name: RouteName.Page404,
