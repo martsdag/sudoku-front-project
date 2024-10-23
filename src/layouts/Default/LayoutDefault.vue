@@ -1,8 +1,8 @@
 <template>
-  <div class="flex h-screen">
-    <div class="flex flex-col flex-1 relative">
+  <div>
+    <div>
       <LayoutDefaultHeader />
-      <main class="flex-1 flex overflow-y-auto">
+      <main>
         <slot />
       </main>
       <LayoutDefaultFooter />
