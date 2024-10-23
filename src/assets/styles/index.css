@@ -3,18 +3,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800&display=swap');
 
 :root {
-  --button-bg: #6495ed;
-  --button-border: #2f58a3;
-  --button-hover-bg: #8fb3f1;
-  --button-disabled-bg: #1f3a70;
-  --button-text: #f0f8ff;
-  --button-focus-outline: #1f3a70;
+  --color-text: white;
+  --color-details-1: #d6e6ff;
+  --color-details-10: #afccff;
+  --color-details-50: #8bb3fb;
+  --color-details-75: #6a99f0;
+  --color-details-100: #507fe3;
+  --color-details-200: #3a65d3;
+  --color-details-300: #274bbf;
+  --color-details-400: #1832a4;
+  --color-details-500: #0c1c83;
+  --color-details-600: #050c59;
 }
 
 .button {
   all: unset;
-  background-color: var(--button-bg);
-  border: 2px solid var(--button-border);
+  background-color: var(--color-details-100);
+  border: 2px solid var(--color-details-300);
   border-radius: 6px;
   padding: 8px;
   text-align: center;
@@ -27,29 +32,22 @@
   position: relative;
 }
 
-.button:hover {
-  background-color: var(--button-hover-bg);
-}
-
-.button:disabled {
+.button[disabled] {
   pointer-events: none;
-  background-color: var(--button-disabled-bg);
-  color: var(--button-text);
+  background-color: var(--color-details-500);
+  color: var(--color-text);
   cursor: not-allowed;
 }
 
+.button:hover {
+  background-color: var(--color-details-50);
+}
+
 .button:active {
-  color: var(--button-text);
-  border-color: var(--button-border);
+  color: var(--color-text);
+  border-color: var(--color-details-300);
 }
 
 .button:focus {
-  outline: 1px solid var(--button-focus-outline);
-}
-
-.button-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+  outline: 1px solid var(--color-details-300);
 }
