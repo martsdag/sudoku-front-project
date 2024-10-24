@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="page-sudoku">
     <div>модель: {{ model }}</div>
-    <div class="button-container">
+    <div class="page-sudoku__buttons">
       <RouterLink
         v-for="difficulty in Object.values(Difficulty)"
         :to="{ name: RouteName.Sudoku, query: { difficulty } }"
         class="button"
+        activeClass="button--active"
         :key="difficulty"
       >
         {{ difficulty }}
@@ -46,8 +47,12 @@ watch(
 </script>
 
 <style>
-.button-container {
+.page-sudoku__buttons {
   display: flex;
   gap: 10px;
+}
+
+.button--active {
+  border-color: var(--color-blue-800);
 }
 </style>
