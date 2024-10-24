@@ -40,8 +40,8 @@
     background-color: var(--color-blue-300);
   }
 
-  &:active{
-    border-color: var(--color-blue-800);
+  &:active, &.button--active {
+    border-color: var(--color-blue-100);
   }
 
   &:focus {

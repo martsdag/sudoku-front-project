@@ -5,8 +5,7 @@
       <RouterLink
         v-for="difficulty in Object.values(Difficulty)"
         :to="{ name: RouteName.Sudoku, query: { difficulty } }"
-        class="button"
-        activeClass="button--active"
+        :class="[BUTTON.default, difficulty === route.query.difficulty && BUTTON.ACTIVE]"
         :key="difficulty"
       >
         {{ difficulty }}
@@ -22,6 +21,7 @@ import { useRoute } from 'vue-router';
 import { Difficulty, type Sudoku } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
 import { isDifficulty } from '@/helpers/isDifficulty';
+import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
 import { RouteName } from '@/router';
 
@@ -50,9 +50,5 @@ watch(
 .page-sudoku__buttons {
   display: flex;
   gap: 10px;
-}
-
-.button--active {
-  border-color: var(--color-blue-800);
 }
 </style>
