@@ -1,12 +1,10 @@
 <template>
   <div>
-    <div>
-      <LayoutDefaultHeader />
-      <main>
-        <slot />
-      </main>
-      <LayoutDefaultFooter />
-    </div>
+    <LayoutDefaultHeader />
+    <main>
+      <slot />
+    </main>
+    <LayoutDefaultFooter />
   </div>
 </template>
 
