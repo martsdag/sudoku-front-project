@@ -1,3 +1,50 @@
 @import 'normalize.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800&display=swap');
+
+:root {
+  --color-blue-100:#dbeafe;
+  --color-blue-200:#bfdbfe;
+  --color-blue-300:#93c5fd;
+  --color-blue-400:#60a5fa;
+  --color-blue-500:#3b82f6;
+  --color-blue-600:#2563eb;
+  --color-blue-700:#1d4ed8;
+  --color-blue-800:#1e40af;
+  --color-blue-900:#1e3a8a;
+  --color-blue-950:#172554;
+}
+
+.button {
+  all: unset;
+  background-color: var(--color-blue-500);
+  border: 2px solid var(--color-blue-800);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s;
+  position: relative;
+
+  &[disabled] {
+    pointer-events: none;
+    background-color: var(--color-blue-900);
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    background-color: var(--color-blue-300);
+  }
+
+  &:active{
+    border-color: var(--color-blue-800);
+  }
+
+  &:focus {
+    outline: 1px solid var(--color-blue-800);
+  }
+}

@@ -1,12 +1,10 @@
 <template>
-  <div class="flex h-screen">
-    <div class="flex flex-col flex-1 relative">
-      <LayoutDefaultHeader />
-      <main class="flex-1 flex overflow-y-auto">
-        <slot />
-      </main>
-      <LayoutDefaultFooter />
-    </div>
+  <div>
+    <LayoutDefaultHeader />
+    <main>
+      <slot />
+    </main>
+    <LayoutDefaultFooter />
   </div>
 </template>
 
