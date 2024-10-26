@@ -47,9 +47,11 @@ watch(
 </script>
 
 <style>
-.page-sudoku__buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.page-sudoku {
+  .page-sudoku__buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 }
 </style>
