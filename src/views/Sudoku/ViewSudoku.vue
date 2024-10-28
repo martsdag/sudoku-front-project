@@ -11,14 +11,15 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <table class="sudoku-grid">
+    <table class="page-sudoku__sudoku-grid">
       <tbody>
         <tr v-for="(row, rowIndex) in model" :key="rowIndex">
           <td
             v-for="(cell, cellIndex) in row"
+            class="page-sudoku__sudoku-cell"
             :class="{
-              'bold-border-right': (cellIndex + 1) % 3 === 0 && cellIndex !== 8,
-              'bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
+              'page-sudoku__sudoku-cell_bold-border-right': (cellIndex + 1) % 3 === 0 && cellIndex !== 8,
+              'page-sudoku__sudoku-cell_bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
             }"
             :key="cellIndex"
           >
@@ -67,36 +68,31 @@ watch(
   .page-sudoku__buttons {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
   }
-}
 
-.sudoku-grid {
-  display: flex;
-  justify-content: center;
-  border-collapse: collapse;
-  width: 100%;
-  max-width: 358px;
-  margin: 0 auto;
-  background-color: #ffffff;
-}
+  .page-sudoku__sudoku-grid {
+    display: flex;
+    justify-content: center;
+    border-collapse: collapse;
+    background-color: var(--color-white);
+  }
 
-td {
-  width: 36px;
-  height: 36px;
-  max-width: 36px;
-  max-height: 36px;
-  border: 1px solid black;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 24px;
-}
+  .page-sudoku__sudoku-cell {
+    --cell-size: 1.2em;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid var(--color-black);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24px;
 
-.bold-border-right {
-  border-right: 2px solid black;
-}
+    &.page-sudoku__sudoku-cell_bold-border-bottom {
+      border-bottom-width: 2px;
+    }
 
-.bold-border-bottom {
-  border-bottom: 2px solid black;
+    &.page-sudoku__sudoku-cell_bold-border-right {
+      border-right-width: 2px;
+    }
+  }
 }
 </style>
