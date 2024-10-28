@@ -11,6 +11,23 @@
         {{ difficulty }}
       </RouterLink>
     </div>
+    <table class="page-sudoku__sudoku-grid">
+      <tbody>
+        <tr v-for="(row, rowIndex) in model" :key="rowIndex">
+          <td
+            v-for="(cell, cellIndex) in row"
+            class="page-sudoku__sudoku-cell"
+            :class="{
+              'page-sudoku__sudoku-cell_bold-border-right': (cellIndex + 1) % 3 === 0 && cellIndex !== 8,
+              'page-sudoku__sudoku-cell_bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
+            }"
+            :key="cellIndex"
+          >
+            {{ cell }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -51,7 +68,31 @@ watch(
   .page-sudoku__buttons {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
+  }
+
+  .page-sudoku__sudoku-grid {
+    display: flex;
+    justify-content: center;
+    border-collapse: collapse;
+    background-color: var(--color-white);
+  }
+
+  .page-sudoku__sudoku-cell {
+    --cell-size: 1.2em;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid var(--color-black);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24px;
+
+    &.page-sudoku__sudoku-cell_bold-border-bottom {
+      border-bottom-width: 2px;
+    }
+
+    &.page-sudoku__sudoku-cell_bold-border-right {
+      border-right-width: 2px;
+    }
   }
 }
 </style>
