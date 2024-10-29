@@ -15,15 +15,21 @@
       <tbody>
         <tr v-for="(row, rowIndex) in model" :key="rowIndex">
           <td
-            v-for="(cell, cellIndex) in row"
+            v-for="(col, colIndex) in row"
             class="page-sudoku__sudoku-cell"
             :class="{
-              'page-sudoku__sudoku-cell_bold-border-right': (cellIndex + 1) % 3 === 0 && cellIndex !== 8,
+              'page-sudoku__sudoku-cell_bold-border-right': (colIndex + 1) % 3 === 0 && colIndex !== 8,
               'page-sudoku__sudoku-cell_bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
             }"
-            :key="cellIndex"
+            :key="colIndex"
           >
-            {{ cell }}
+            <input
+              :value="col"
+              class="page-sudoku__cell-input"
+              :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
+              maxlength="1"
+              @input="(event) => onInput(event, [rowIndex, colIndex])"
+            />
           </td>
         </tr>
       </tbody>
@@ -41,10 +47,23 @@ import { isDifficulty } from '@/helpers/isDifficulty';
 import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
 import { RouteName } from '@/router';
+import { isNil } from '@/utils/isNil';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+
+const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
+  const value = (event.target as HTMLInputElement).value;
+
+  const row = model.value[rowIndex];
+
+  if (isNil(row)) {
+    return;
+  }
+
+  row[colIndex] = value;
+};
 
 watch(
   () => route.query.difficulty,
@@ -93,6 +112,10 @@ watch(
     &.page-sudoku__sudoku-cell_bold-border-right {
       border-right-width: 2px;
     }
+  }
+  .page-sudoku__cell-input {
+    all: unset;
+    width: inherit;
   }
 }
 </style>
