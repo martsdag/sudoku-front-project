@@ -24,10 +24,10 @@
             :key="colIndex"
           >
             <input
+              type="number"
               :value="col"
               class="page-sudoku__cell-input"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
-              maxlength="1"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
             />
           </td>
@@ -75,7 +75,7 @@ watch(
     }
 
     sudokuStore.getSudoku(difficulty).then((sudoku) => {
-      model.value = sudoku.puzzle;
+      model.value = sudoku.puzzle.map((row) => row.map((col) => (col === '-' ? '' : col)));
     });
   },
   { immediate: true },
@@ -116,6 +116,12 @@ watch(
   .page-sudoku__cell-input {
     all: unset;
     width: inherit;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
   }
 }
 </style>
