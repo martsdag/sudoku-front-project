@@ -24,7 +24,9 @@
             :key="colIndex"
           >
             <input
-              type="number"
+              type="text"
+              inputmode="numeric"
+              maxlength="1"
               :value="col === '-' ? '' : col"
               class="page-sudoku__cell-input"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
@@ -62,7 +64,7 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
     return;
   }
 
-  row[colIndex] = value === '' ? '-' : value;
+  row[colIndex] = value.replace(/[^1-9]/g, '') || '-';
 };
 
 watch(
