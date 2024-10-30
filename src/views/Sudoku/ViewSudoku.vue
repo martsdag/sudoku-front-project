@@ -62,7 +62,7 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
     return;
   }
 
-  row[colIndex] = value;
+  row[colIndex] = value === '' ? '-' : value;
 };
 
 watch(
