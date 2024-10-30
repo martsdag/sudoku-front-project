@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
@@ -54,9 +54,10 @@ import { isNil } from '@/utils/isNil';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+const doMagic = (value: string) => value.replace(/[^1-9]/g, '') || '';
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
-  const value = (event.target as HTMLInputElement).value;
+  const sanitizedValue = doMagic((event.target as HTMLInputElement).value);
 
   const row = model.value[rowIndex];
 
@@ -64,7 +65,11 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
     return;
   }
 
-  row[colIndex] = value.replace(/[^1-9]/g, '') || '-';
+  row[colIndex] = sanitizedValue;
+
+  nextTick(() => {
+    (event.target as HTMLInputElement).value = sanitizedValue;
+  });
 };
 
 watch(
