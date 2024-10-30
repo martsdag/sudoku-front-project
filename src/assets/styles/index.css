@@ -17,6 +17,12 @@
   --color-black:black;
 }
 
+html,
+body {
+  font-family: Roboto, 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
 .button {
   all: unset;
   background-color: var(--color-blue-500);
