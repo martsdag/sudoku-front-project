@@ -25,7 +25,7 @@
           >
             <input
               type="number"
-              :value="col"
+              :value="col === '-' ? '' : col"
               class="page-sudoku__cell-input"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
@@ -75,7 +75,7 @@ watch(
     }
 
     sudokuStore.getSudoku(difficulty).then((sudoku) => {
-      model.value = sudoku.puzzle.map((row) => row.map((col) => (col === '-' ? '' : col)));
+      model.value = sudoku.puzzle;
     });
   },
   { immediate: true },
