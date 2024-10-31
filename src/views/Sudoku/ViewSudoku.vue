@@ -108,7 +108,6 @@ watch(
     height: var(--cell-size);
     border: 1px solid var(--color-black);
     text-align: center;
-    vertical-align: middle;
     font-size: 24px;
 
     &.page-sudoku__sudoku-cell_bold-border-bottom {
