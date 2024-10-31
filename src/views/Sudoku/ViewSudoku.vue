@@ -15,15 +15,23 @@
       <tbody>
         <tr v-for="(row, rowIndex) in model" :key="rowIndex">
           <td
-            v-for="(cell, cellIndex) in row"
+            v-for="(col, colIndex) in row"
             class="page-sudoku__sudoku-cell"
             :class="{
-              'page-sudoku__sudoku-cell_bold-border-right': (cellIndex + 1) % 3 === 0 && cellIndex !== 8,
+              'page-sudoku__sudoku-cell_bold-border-right': (colIndex + 1) % 3 === 0 && colIndex !== 8,
               'page-sudoku__sudoku-cell_bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
             }"
-            :key="cellIndex"
+            :key="colIndex"
           >
-            {{ cell }}
+            <input
+              type="text"
+              inputmode="numeric"
+              maxlength="1"
+              :value="col === '-' ? '' : col"
+              class="page-sudoku__cell-input"
+              :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
+              @input="(event) => onInput(event, [rowIndex, colIndex])"
+            />
           </td>
         </tr>
       </tbody>
@@ -32,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
@@ -41,10 +49,27 @@ import { isDifficulty } from '@/helpers/isDifficulty';
 import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
 import { RouteName } from '@/router';
+import { isNil } from '@/utils/isNil';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+
+const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
+  const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
+
+  const row = model.value[rowIndex];
+
+  if (isNil(row)) {
+    return;
+  }
+
+  row[colIndex] = sanitizedValue;
+
+  nextTick(() => {
+    (event.target as HTMLInputElement).value = sanitizedValue;
+  });
+};
 
 watch(
   () => route.query.difficulty,
@@ -83,7 +108,6 @@ watch(
     height: var(--cell-size);
     border: 1px solid var(--color-black);
     text-align: center;
-    vertical-align: middle;
     font-size: 24px;
 
     &.page-sudoku__sudoku-cell_bold-border-bottom {
@@ -93,6 +117,10 @@ watch(
     &.page-sudoku__sudoku-cell_bold-border-right {
       border-right-width: 2px;
     }
+  }
+  .page-sudoku__cell-input {
+    all: unset;
+    width: inherit;
   }
 }
 </style>
