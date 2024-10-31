@@ -54,10 +54,9 @@ import { isNil } from '@/utils/isNil';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const doMagic = (value: string) => value.replace(/[^1-9]/g, '') || '';
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
-  const sanitizedValue = doMagic((event.target as HTMLInputElement).value);
+  const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
 
   const row = model.value[rowIndex];
 
@@ -123,12 +122,6 @@ watch(
   .page-sudoku__cell-input {
     all: unset;
     width: inherit;
-
-    &::-webkit-inner-spin-button,
-    &::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
   }
 }
 </style>
