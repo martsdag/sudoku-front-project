@@ -12,7 +12,20 @@ export interface Sudoku {
   solution: string[][];
 }
 
+export type SudokuField = string | string[][];
+
+export interface ValidationResult {
+  isOK: boolean;
+  isWin: boolean;
+  errors: SudokuField;
+}
+
 export const getSudoku = (difficulty: Difficulty) =>
   client<Sudoku>(`/sudoku`, {
     params: { difficulty, format: 'matrix' },
+  });
+
+export const validateSudoku = (puzzle: string[][]) =>
+  client<ValidationResult>(`/sudoku/validate`, {
+    params: { puzzle: JSON.stringify(puzzle), format: 'matrix' },
   });
