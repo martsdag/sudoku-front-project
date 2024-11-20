@@ -13,9 +13,20 @@
   --color-blue-800:#1e40af;
   --color-blue-900:#1e3a8a;
   --color-blue-950:#172554;
-  --color-white:white;
-  --color-black:black;
+
+  --color-red-100:#fee2e2;
+  --color-red-200:#fecaca;
+  --color-red-300:#fca5a5;
   --color-red-400:#f87171;
+  --color-red-500:#ef4444;
+  --color-red-600:#dc2626;
+  --color-red-700:#b91c1c;
+  --color-red-800:#991b1b;
+  --color-red-900:#7f1d1d;
+  --color-red-950:#450a0a;
+  
+  --color-white:white;
+  --color-black:black
 }
 
 html,

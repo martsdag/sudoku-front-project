@@ -20,7 +20,7 @@
             :class="{
               'page-sudoku__sudoku-cell_bold-border-right': (colIndex + 1) % 3 === 0 && colIndex !== 8,
               'page-sudoku__sudoku-cell_bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
-              'page-sudoku__sudoku-cell_error': errors[rowIndex]?.[colIndex] === '+',
+              'page-sudoku__sudoku-cell_error': sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+',
             }"
             :key="colIndex"
           >
@@ -44,7 +44,7 @@
 import { nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Difficulty, type ValidationResult, type Sudoku } from '@/api/sudoku';
+import { Difficulty, type Sudoku } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
 import { isDifficulty } from '@/helpers/isDifficulty';
 import { BUTTON } from '@/helpers/ui';
@@ -55,7 +55,6 @@ import { isNil } from '@/utils/isNil';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const errors = ref<ValidationResult['errors']>([]);
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -67,19 +66,10 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   }
 
   if (Array.isArray(row)) {
-    if (sanitizedValue === '') {
-      row[colIndex] = '-';
-      if (Array.isArray(errors.value[rowIndex])) {
-        errors.value[rowIndex][colIndex] = '-';
-      }
-    } else {
-      row[colIndex] = sanitizedValue;
-    }
+    row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
   }
 
-  sudokuStore.validateSudoku(model.value).then((result) => {
-    errors.value = result.errors || [];
-  });
+  sudokuStore.getValidateSudoku(model.value);
 
   nextTick(() => {
     (event.target as HTMLInputElement).value = sanitizedValue;
@@ -134,7 +124,7 @@ watch(
     }
 
     &.page-sudoku__sudoku-cell_error {
-      background-color: var(--color-red-400);
+      background-color: var(--color-red-300);
     }
 
     .page-sudoku__cell-input {

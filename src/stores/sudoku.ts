@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-import { getSudoku as _getSudoku, validateSudoku as _validateSudoku } from '@/api/sudoku';
+import { getSudoku as _getSudoku, getValidateSudoku as _getValidateSudoku } from '@/api/sudoku';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 
 export const useSudokuStore = defineStore('sudoku', () => {
@@ -11,10 +11,10 @@ export const useSudokuStore = defineStore('sudoku', () => {
   } = useAsyncStateApi(_getSudoku, { puzzle: [], solution: [] });
 
   const {
-    execute: validateSudoku,
-    isLoading: isLoadingValidateSudoku,
+    execute: getValidateSudoku,
+    isLoading: isLoadingGetValidateSudoku,
     state: validationResult,
-  } = useAsyncStateApi(_validateSudoku, {
+  } = useAsyncStateApi(_getValidateSudoku, {
     isOK: true,
     isWin: false,
     errors: [],
@@ -24,8 +24,8 @@ export const useSudokuStore = defineStore('sudoku', () => {
     sudoku,
     getSudoku,
     isLoadingGetSudoku,
-    validateSudoku,
-    isLoadingValidateSudoku,
+    getValidateSudoku,
+    isLoadingGetValidateSudoku,
     validationResult,
   };
 });
