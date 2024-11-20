@@ -30,6 +30,12 @@
               maxlength="1"
               :value="col === '-' ? '' : col"
               class="page-sudoku__cell-input"
+              :class="{
+                'page-sudoku__cell-input_user page-sudoku__cell-input_handwritten': isUserInput[rowIndex]?.[colIndex],
+                'page-sudoku__cell-input_error page-sudoku__cell-input_handwritten':
+                  isUserInput[rowIndex]?.[colIndex] &&
+                  sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+',
+              }"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
             />
@@ -55,6 +61,7 @@ import { isNil } from '@/utils/isNil';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+const isUserInput = ref<boolean[][]>([]);
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -67,6 +74,11 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
   if (Array.isArray(row)) {
     row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
+
+    if (!isUserInput.value[rowIndex]) {
+      isUserInput.value[rowIndex] = [];
+    }
+    isUserInput.value[rowIndex][colIndex] = sanitizedValue !== '';
   }
 
   sudokuStore.getValidateSudoku(model.value);
@@ -124,12 +136,24 @@ watch(
     }
 
     &.page-sudoku__sudoku-cell_error {
-      background-color: var(--color-red-300);
+      background-color: var(--color-red-200);
     }
 
     .page-sudoku__cell-input {
       all: unset;
       width: inherit;
+
+      &.page-sudoku__cell-input_user {
+        color: var(--color-blue-900);
+      }
+
+      &.page-sudoku__cell-input_error {
+        color: var(--color-red-600);
+      }
+
+      &.page-sudoku__cell-input_handwritten {
+        font-family: 'Kalam', cursive;
+      }
     }
   }
 }
