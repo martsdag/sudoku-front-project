@@ -30,12 +30,7 @@
               maxlength="1"
               :value="col === '-' ? '' : col"
               class="page-sudoku__cell-input"
-              :class="{
-                'page-sudoku__cell-input_user page-sudoku__cell-input_handwritten': isUserInput[rowIndex]?.[colIndex],
-                'page-sudoku__cell-input_error page-sudoku__cell-input_handwritten':
-                  isUserInput[rowIndex]?.[colIndex] &&
-                  sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+',
-              }"
+              :class="getClass(rowIndex, colIndex)"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
             />
@@ -61,7 +56,15 @@ import { isNil } from '@/utils/isNil';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const isUserInput = ref<boolean[][]>([]);
+
+const getClass = (rowIndex: number, colIndex: number) => ({
+  'page-sudoku__cell-input_user page-sudoku__cell-input_handwritten': !/\d/.test(
+    String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]),
+  ),
+  'page-sudoku__cell-input_error page-sudoku__cell-input_handwritten':
+    !/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex])) &&
+    sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+',
+});
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -73,9 +76,6 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   }
 
   row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
-
-  isUserInput.value[rowIndex] = isUserInput.value[rowIndex] || [];
-  isUserInput.value[rowIndex][colIndex] = sanitizedValue !== '';
 
   sudokuStore.getValidateSudoku(model.value);
 
