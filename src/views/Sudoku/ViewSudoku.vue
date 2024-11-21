@@ -72,14 +72,10 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
     return;
   }
 
-  if (Array.isArray(row)) {
-    row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
+  row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
 
-    if (!isUserInput.value[rowIndex]) {
-      isUserInput.value[rowIndex] = [];
-    }
-    isUserInput.value[rowIndex][colIndex] = sanitizedValue !== '';
-  }
+  isUserInput.value[rowIndex] = isUserInput.value[rowIndex] || [];
+  isUserInput.value[rowIndex][colIndex] = sanitizedValue !== '';
 
   sudokuStore.getValidateSudoku(model.value);
 
