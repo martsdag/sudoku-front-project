@@ -57,14 +57,14 @@ const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
 
-const getClass = (rowIndex: number, colIndex: number) => ({
-  'page-sudoku__cell-input_user page-sudoku__cell-input_handwritten': !/\d/.test(
-    String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]),
-  ),
-  'page-sudoku__cell-input_error page-sudoku__cell-input_handwritten':
-    !/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex])) &&
-    sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+',
-});
+const getClass = (rowIndex: number, colIndex: number): Record<string, boolean> => {
+  const isReadonly = !/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]));
+
+  return {
+    'page-sudoku__cell-input_handwritten': isReadonly,
+    'page-sudoku__cell-input_error': sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+' && isReadonly,
+  };
+};
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -139,16 +139,13 @@ watch(
       all: unset;
       width: inherit;
 
-      &.page-sudoku__cell-input_user {
-        color: var(--color-blue-900);
-      }
-
-      &.page-sudoku__cell-input_error {
-        color: var(--color-red-600);
-      }
-
       &.page-sudoku__cell-input_handwritten {
         font-family: 'Kalam', cursive;
+        color: var(--color-blue-900);
+
+        &.page-sudoku__cell-input_error {
+          color: var(--color-red-600);
+        }
       }
     }
   }
