@@ -30,7 +30,6 @@
               maxlength="1"
               :value="col === '-' ? '' : col"
               class="page-sudoku__cell-input"
-              :class="getClass(rowIndex, colIndex)"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
             />
@@ -56,15 +55,6 @@ import { isNil } from '@/utils/isNil';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-
-const getClass = (rowIndex: number, colIndex: number): Record<string, boolean> => {
-  const isReadonly = !/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]));
-
-  return {
-    'page-sudoku__cell-input_handwritten': isReadonly,
-    'page-sudoku__cell-input_error': sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+' && isReadonly,
-  };
-};
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -132,21 +122,23 @@ watch(
     }
 
     &.page-sudoku__sudoku-cell_error {
-      background-color: var(--color-red-200);
-    }
-
-    .page-sudoku__cell-input {
-      all: unset;
-      width: inherit;
-
-      &.page-sudoku__cell-input_handwritten {
-        font-family: 'Kalam', cursive;
-        color: var(--color-blue-900);
-
-        &.page-sudoku__cell-input_error {
-          color: var(--color-red-600);
-        }
+      &:has(.page-sudoku__cell-input[readonly]) {
+        background-color: var(--color-red-200);
       }
+
+      .page-sudoku__cell-input:not([readonly]) {
+        color: var(--color-red-600);
+      }
+    }
+  }
+
+  .page-sudoku__cell-input {
+    all: unset;
+    width: inherit;
+
+    &:not([readonly]) {
+      font-family: 'Kalam', cursive;
+      color: var(--color-blue-900);
     }
   }
 }
