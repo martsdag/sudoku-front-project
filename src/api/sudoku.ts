@@ -7,12 +7,25 @@ export enum Difficulty {
   Expert = 'expert',
 }
 
+export type SudokuField = string[][];
+
 export interface Sudoku {
-  puzzle: string[][];
-  solution: string[][];
+  puzzle: SudokuField;
+  solution: SudokuField;
+}
+
+export interface ValidationResult {
+  isOK: boolean;
+  isWin: boolean;
+  errors: SudokuField;
 }
 
 export const getSudoku = (difficulty: Difficulty) =>
   client<Sudoku>(`/sudoku`, {
     params: { difficulty, format: 'matrix' },
+  });
+
+export const getValidateSudoku = (puzzle: SudokuField) =>
+  client<ValidationResult>(`/sudoku/validate`, {
+    params: { puzzle: JSON.stringify(puzzle), format: 'matrix' },
   });

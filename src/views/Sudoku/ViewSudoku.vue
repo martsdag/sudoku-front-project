@@ -20,6 +20,7 @@
             :class="{
               'page-sudoku__sudoku-cell_bold-border-right': (colIndex + 1) % 3 === 0 && colIndex !== 8,
               'page-sudoku__sudoku-cell_bold-border-bottom': (rowIndex + 1) % 3 === 0 && rowIndex !== 8,
+              'page-sudoku__sudoku-cell_error': sudokuStore.validationResult.errors[rowIndex]?.[colIndex] === '+',
             }"
             :key="colIndex"
           >
@@ -64,7 +65,9 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
     return;
   }
 
-  row[colIndex] = sanitizedValue;
+  row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
+
+  sudokuStore.getValidateSudoku(model.value);
 
   nextTick(() => {
     (event.target as HTMLInputElement).value = sanitizedValue;
@@ -117,10 +120,26 @@ watch(
     &.page-sudoku__sudoku-cell_bold-border-right {
       border-right-width: 2px;
     }
+
+    &.page-sudoku__sudoku-cell_error {
+      &:has(.page-sudoku__cell-input[readonly]) {
+        background-color: var(--color-red-200);
+      }
+
+      .page-sudoku__cell-input:not([readonly]) {
+        color: var(--color-red-600);
+      }
+    }
   }
+
   .page-sudoku__cell-input {
     all: unset;
     width: inherit;
+
+    &:not([readonly]) {
+      font-family: 'Kalam', cursive;
+      color: var(--color-blue-900);
+    }
   }
 }
 </style>
