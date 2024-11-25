@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <div class="header__content">
+    <div class="header__content _container">
       <RouterLink :to class="header__link header__link--home">На главную</RouterLink>
       <ul class="header__list">
         <li v-for="link in links" class="header__item" :key="link.to.name">
@@ -25,8 +25,6 @@ const links = computed(() => [{ to: { name: RouteName.Sudoku } }]);
 }
 
 .header__content {
-  width: 90%;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   gap: 1rem;

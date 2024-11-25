@@ -1,6 +1,5 @@
 <template>
-  <div class="page-sudoku">
-    <div>{{ model }}</div>
+  <div class="page-sudoku _container">
     <div class="page-sudoku__buttons">
       <RouterLink
         v-for="difficulty in Object.values(Difficulty)"
@@ -93,6 +92,7 @@ watch(
 
 <style>
 .page-sudoku {
+  padding: 16px 0;
   .page-sudoku__buttons {
     display: flex;
     gap: 10px;

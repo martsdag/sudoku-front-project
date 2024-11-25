@@ -68,3 +68,10 @@ body {
     outline: 1px solid var(--color-blue-800);
   }
 }
+
+._container {
+  width: 90%;
+  /* margin сомнительно */
+  margin: 0 auto;
+  max-width: 75rem;
+}

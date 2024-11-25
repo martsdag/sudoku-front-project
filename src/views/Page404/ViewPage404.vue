@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
-    <h1 class="text-404">404</h1>
-    <p class="text-page">Page not found.</p>
+  <div class="page-404 _container">
+    <h1 class="page-404__title">404</h1>
+    <p class="page-404__subtitle">Page not found.</p>
     <p>
       This page might have been removed, had its name changed or temporarily unavailable. Or you might have misspelled
       the URL.
     </p>
-    <RouterLink :to="{ name: RouteName.Home }" class="text-to-home">To home</RouterLink>
+    <RouterLink :to="{ name: RouteName.Home }" class="page-404__link">To home</RouterLink>
   </div>
 </template>
 
@@ -15,10 +15,7 @@ import { RouteName } from '@/router';
 </script>
 
 <style>
-.container {
-  max-width: 75rem;
-  width: 90%;
-  margin: 0% auto;
+.page-404 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,16 +23,16 @@ import { RouteName } from '@/router';
   gap: 1.5rem;
   flex-direction: column;
 }
-.text-404 {
+.page-404__title {
   font-size: 4rem;
   line-height: 1rem;
   margin-bottom: 0%;
 }
-.text-page {
+.page-404__subtitle {
   font-size: 2rem;
   margin-bottom: 0%;
 }
-.text-to-home {
+.page-404__link {
   font-size: 1.8rem;
   line-height: 1.75rem;
 }
