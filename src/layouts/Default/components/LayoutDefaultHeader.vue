@@ -37,6 +37,10 @@ const links = computed(() => [{ to: { name: RouteName.Sudoku } }]);
   padding: 0;
 }
 
+.header__item {
+  list-style-type: none;
+}
+
 .header__link {
   color: var(--color-blue-700);
   text-decoration: none;
@@ -61,10 +65,6 @@ const links = computed(() => [{ to: { name: RouteName.Sudoku } }]);
 
 .header__link:hover::after {
   width: 100%;
-}
-
-.header__item {
-  list-style-type: none;
 }
 
 .header__link--active {

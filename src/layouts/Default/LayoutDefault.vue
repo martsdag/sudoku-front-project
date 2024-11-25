@@ -1,7 +1,7 @@
 <template>
   <div class="layout-default">
     <LayoutDefaultHeader />
-    <main class="layout-default--main">
+    <main class="layout-default__main">
       <slot />
     </main>
     <LayoutDefaultFooter />
@@ -22,7 +22,7 @@ import LayoutDefaultHeader from './components/LayoutDefaultHeader.vue';
   overflow: hidden;
 }
 
-.layout-default--main {
+.layout-default__main {
   scrollbar-gutter: stable both-edges;
   position: relative;
   overflow-y: auto;
