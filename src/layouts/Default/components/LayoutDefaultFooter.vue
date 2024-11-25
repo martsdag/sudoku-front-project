@@ -18,7 +18,8 @@ const githubLink = import.meta.env.VITE_GITHUB_LINK;
 
 <style>
 .footer {
-  border-top: 1px solid var(--color-blue-950);
+  border-top: 1px solid var(--color-blue-200);
+  background-color: var(--color-white);
 }
 .footer-links {
   padding-top: 0.5rem;

@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header__content _container">
-      <RouterLink :to class="header__link header__link--home">На главную</RouterLink>
+      <RouterLink :to class="header__link">На главную</RouterLink>
       <ul class="header__list">
         <li v-for="link in links" class="header__item" :key="link.to.name">
           <RouterLink :to="link.to" activeClass="header__link--active" class="header__link">Судоку</RouterLink>
@@ -21,7 +21,8 @@ const links = computed(() => [{ to: { name: RouteName.Sudoku } }]);
 
 <style>
 .header {
-  border-bottom: 1px solid var(--color-blue-950);
+  border-bottom: 1px solid var(--color-blue-200);
+  background-color: var(--color-white);
 }
 
 .header__content {
@@ -37,19 +38,37 @@ const links = computed(() => [{ to: { name: RouteName.Sudoku } }]);
 }
 
 .header__link {
-  color: var(--color-blue-950);
+  color: var(--color-blue-700);
+  text-decoration: none;
+  font-size: 18px;
+  position: relative;
+}
+
+.header__link:hover {
+  color: var(--color-blue-500);
+}
+
+.header__link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-blue-400);
+  transition: width 0.3s ease;
+}
+
+.header__link:hover::after {
+  width: 100%;
 }
 
 .header__item {
   list-style-type: none;
 }
 
-.header__link--home {
-  font-weight: lighter;
-}
-
 .header__link--active {
-  text-decoration: underline;
   font-weight: bold;
+  color: var(--color-blue-500);
 }
 </style>
