@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header__content _container">
-      <RouterLink :to class="header__link">На главную</RouterLink>
+      <RouterLink :to activeClass="header__link--active" class="header__link">На главную</RouterLink>
       <ul class="header__list">
         <li v-for="link in links" class="header__item" :key="link.to.name">
           <RouterLink :to="link.to" activeClass="header__link--active" class="header__link">Судоку</RouterLink>
