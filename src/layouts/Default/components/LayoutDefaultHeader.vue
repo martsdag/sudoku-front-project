@@ -1,7 +1,9 @@
 <template>
   <header class="header">
     <div class="header__content _container">
-      <RouterLink :to activeClass="header__link--active" class="header__link">На главную</RouterLink>
+      <RouterLink :to="{ name: RouteName.Home }" activeClass="header__link--active" class="header__link"
+        >На главную</RouterLink
+      >
       <ul class="header__list">
         <li v-for="link in links" class="header__item" :key="link.to.name">
           <RouterLink :to="link.to" activeClass="header__link--active" class="header__link">Судоку</RouterLink>
@@ -13,10 +15,8 @@
 
 <script setup lang="ts">
 import { RouteName } from '@/router';
-import { computed } from 'vue';
 
-const to = { name: RouteName.Home };
-const links = computed(() => [{ to: { name: RouteName.Sudoku } }]);
+const links = [{ to: { name: RouteName.Sudoku } }];
 </script>
 
 <style>
