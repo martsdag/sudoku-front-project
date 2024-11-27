@@ -1,5 +1,5 @@
 <template>
-  <div class="page-sudoku _container layout-padding">
+  <div class="page-sudoku _container _page">
     <div class="page-sudoku__buttons">
       <RouterLink
         v-for="difficulty in Object.values(Difficulty)"
@@ -95,6 +95,8 @@ watch(
   .page-sudoku__buttons {
     display: flex;
     gap: 0.625rem;
+    justify-content: center;
+    padding: 1rem;
   }
 
   .page-sudoku__sudoku-grid {

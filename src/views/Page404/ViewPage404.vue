@@ -1,8 +1,8 @@
 <template>
-  <div class="page-404 _container layout-padding">
+  <div class="page-404 _container _page">
     <h1 class="page-404__title">404</h1>
     <p class="page-404__subtitle">Page not found.</p>
-    <p>
+    <p class="page-404__description">
       This page might have been removed, had its name changed or temporarily unavailable. Or you might have misspelled
       the URL.
     </p>
@@ -33,6 +33,10 @@ import { RouteName } from '@/router';
 .page-404__subtitle {
   font-size: 2rem;
   margin-bottom: 0%;
+}
+
+.page-404__description {
+  color: var(--color-grey);
 }
 
 .page-404__link {

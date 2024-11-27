@@ -27,6 +27,7 @@
   
   --color-white:white;
   --color-black:black;
+  --color-grey: #a1a1aa;
 }
 
 html,
@@ -77,6 +78,7 @@ body {
   max-width: 75rem;
 }
 
-.layout-padding {
+._page{
   padding: 1rem 0;
 }
+
