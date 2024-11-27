@@ -38,9 +38,9 @@ body {
 .button {
   all: unset;
   background-color: var(--color-blue-300);
-  border: 2px solid var(--color-blue-100);
-  border-radius: 6px;
-  padding: 8px;
+  border: 0.125rem solid var(--color-blue-100);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
   text-align: center;
   cursor: pointer;
   user-select: none;
@@ -75,4 +75,8 @@ body {
   /* margin сомнительно */
   margin: 0 auto;
   max-width: 75rem;
+}
+
+.layout-padding {
+  padding: 1rem 0;
 }

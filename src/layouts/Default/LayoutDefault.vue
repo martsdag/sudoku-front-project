@@ -19,13 +19,10 @@ import LayoutDefaultHeader from './components/LayoutDefaultHeader.vue';
   flex-direction: column;
   min-height: 100dvh;
   background-color: var(--color-white);
-  overflow: hidden;
 }
 
 .layout-default__main {
-  scrollbar-gutter: stable both-edges;
   position: relative;
-  overflow-y: auto;
   display: flex;
   flex: 1;
   flex-direction: column;

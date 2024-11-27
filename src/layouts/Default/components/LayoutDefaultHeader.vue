@@ -1,12 +1,11 @@
 <template>
   <header class="header">
     <div class="header__content _container">
-      <RouterLink :to="{ name: RouteName.Home }" activeClass="header__link--active" class="header__link"
-        >На главную</RouterLink
-      >
-      <ul class="header__list">
-        <li v-for="link in links" class="header__item" :key="link.to.name">
-          <RouterLink :to="link.to" activeClass="header__link--active" class="header__link">Судоку</RouterLink>
+      <ul class="header__links">
+        <li v-for="link in links" class="header__links-link" :key="link.to.name">
+          <RouterLink :to="link.to" activeClass="header__link--active" class="header__link">
+            {{ link.text }}
+          </RouterLink>
         </li>
       </ul>
     </div>
@@ -15,8 +14,12 @@
 
 <script setup lang="ts">
 import { RouteName } from '@/router';
+import { computed } from 'vue';
 
-const links = [{ to: { name: RouteName.Sudoku } }];
+const links = computed(() => [
+  { text: 'Главная', to: { name: RouteName.Home } },
+  { text: 'Судоку', to: { name: RouteName.Sudoku } },
+]);
 </script>
 
 <style>
@@ -31,13 +34,13 @@ const links = [{ to: { name: RouteName.Sudoku } }];
   gap: 1rem;
 }
 
-.header__list {
+.header__links {
   display: flex;
   gap: 0.5rem;
   padding: 0;
 }
 
-.header__item {
+.header__links-link {
   list-style-type: none;
 }
 
@@ -46,25 +49,25 @@ const links = [{ to: { name: RouteName.Sudoku } }];
   text-decoration: none;
   font-size: 18px;
   position: relative;
-}
 
-.header__link:hover {
-  color: var(--color-blue-500);
-}
+  &:hover {
+    color: var(--color-blue-500);
 
-.header__link::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--color-blue-400);
-  transition: width 0.3s ease;
-}
+    &::after {
+      width: 100%;
+    }
+  }
 
-.header__link:hover::after {
-  width: 100%;
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 0.125rem;
+    background-color: var(--color-blue-400);
+    transition: width 0.3s ease;
+  }
 }
 
 .header__link--active {

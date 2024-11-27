@@ -1,5 +1,5 @@
 <template>
-  <div class="page-404 _container">
+  <div class="page-404 _container layout-padding">
     <h1 class="page-404__title">404</h1>
     <p class="page-404__subtitle">Page not found.</p>
     <p>
@@ -23,15 +23,18 @@ import { RouteName } from '@/router';
   gap: 1.5rem;
   flex-direction: column;
 }
+
 .page-404__title {
   font-size: 4rem;
   line-height: 1rem;
   margin-bottom: 0%;
 }
+
 .page-404__subtitle {
   font-size: 2rem;
   margin-bottom: 0%;
 }
+
 .page-404__link {
   font-size: 1.8rem;
   line-height: 1.75rem;

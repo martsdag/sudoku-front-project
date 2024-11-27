@@ -1,5 +1,5 @@
 <template>
-  <div class="page-sudoku _container">
+  <div class="page-sudoku _container layout-padding">
     <div class="page-sudoku__buttons">
       <RouterLink
         v-for="difficulty in Object.values(Difficulty)"
@@ -92,10 +92,9 @@ watch(
 
 <style>
 .page-sudoku {
-  padding: 16px 0;
   .page-sudoku__buttons {
     display: flex;
-    gap: 10px;
+    gap: 0.625rem;
   }
 
   .page-sudoku__sudoku-grid {
@@ -114,11 +113,11 @@ watch(
     font-size: 24px;
 
     &.page-sudoku__sudoku-cell_bold-border-bottom {
-      border-bottom-width: 2px;
+      border-bottom-width: 0.125rem;
     }
 
     &.page-sudoku__sudoku-cell_bold-border-right {
-      border-right-width: 2px;
+      border-right-width: 0.125rem;
     }
 
     &.page-sudoku__sudoku-cell_error {

@@ -21,9 +21,9 @@ const githubLink = import.meta.env.VITE_GITHUB_LINK;
   border-top: 1px solid var(--color-blue-200);
   background-color: var(--color-white);
 }
+
 .footer-links {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 0;
   display: flex;
   gap: 0.5rem;
   align-items: center;
