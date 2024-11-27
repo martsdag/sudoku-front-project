@@ -36,7 +36,7 @@ const links = computed(() => [
 
 .header__links {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   padding: 0;
 }
 
