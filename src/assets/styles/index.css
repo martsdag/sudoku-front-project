@@ -47,6 +47,10 @@ body {
   font-size: 16px;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .button {
   all: unset;
   background-color: var(--color-blue-300);
