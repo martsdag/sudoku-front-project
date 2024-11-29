@@ -14,12 +14,11 @@
 
 <script setup lang="ts">
 import { RouteName } from '@/router';
-import { computed } from 'vue';
 
-const links = computed(() => [
+const links = [
   { text: 'Главная', to: { name: RouteName.Home } },
   { text: 'Судоку', to: { name: RouteName.Sudoku } },
-]);
+];
 </script>
 
 <style>
