@@ -36,7 +36,7 @@ import { RouteName } from '@/router';
 }
 
 .page-404__description {
-  color: var(--color-grey);
+  color: var(--color-zinc-400);
 }
 
 .page-404__link {
