@@ -3,6 +3,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root {
+
+  --color-zinc-100:#f4f4f5;
+  --color-zinc-200:#e4e4e7;
+  --color-zinc-300:#d4d4d8;
+  --color-zinc-400:#a1a1aa;
+  --color-zinc-500:#71717a;
+  --color-zinc-600:#52525b;
+  --color-zinc-700:#3f3f46;
+  --color-zinc-800:#27272a;
+  --color-zinc-900:#18181b;
+  --color-zinc-950:#09090b;
+
   --color-blue-100:#dbeafe;
   --color-blue-200:#bfdbfe;
   --color-blue-300:#93c5fd;
@@ -35,12 +47,16 @@ body {
   font-size: 16px;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .button {
   all: unset;
-  background-color: var(--color-blue-500);
-  border: 2px solid var(--color-blue-800);
-  border-radius: 6px;
-  padding: 8px;
+  background-color: var(--color-blue-300);
+  border: 0.125rem solid var(--color-blue-100);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
   text-align: center;
   cursor: pointer;
   user-select: none;
@@ -57,14 +73,27 @@ body {
   }
 
   &:hover {
-    background-color: var(--color-blue-300);
+    background-color: var(--color-blue-400);
   }
 
   &:active, &.button_active {
-    border-color: var(--color-blue-100);
+    border-color: var(--color-blue-800);
   }
 
   &:focus {
-    outline: 1px solid var(--color-blue-800);
+    outline: 1px solid var(--color-blue-200);
+    box-shadow: 0 0 10px var(--color-blue-200);
   }
 }
+
+._container {
+  width: 90%;
+  /* margin сомнительно */
+  margin: 0 auto;
+  max-width: 75rem;
+}
+
+._page{
+  padding: 1rem 0;
+}
+
