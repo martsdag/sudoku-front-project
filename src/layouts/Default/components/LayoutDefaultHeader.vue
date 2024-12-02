@@ -40,7 +40,7 @@ const links = [
   .header__link {
     color: var(--color-blue-700);
     text-decoration: none;
-    font-size: 18px;
+    font-size: 1.125rem;
     position: relative;
 
     &:hover {
