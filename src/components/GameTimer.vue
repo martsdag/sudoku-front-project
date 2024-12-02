@@ -1,6 +1,6 @@
 <template>
   <div class="timer-container">
-    <div v-if="isTimerVisible" class="timer">{{ formattedTime }}</div>
+    <div class="timer">{{ formattedTime }}</div>
     <BaseIcon
       :path="mdiTimerOutline"
       class="icon"
@@ -19,7 +19,6 @@ import { format } from 'date-fns';
 import { ICON } from '@/helpers/ui';
 
 const isTimerRunning = ref(false);
-const isTimerVisible = ref(false);
 
 const startTime = ref<number | null>(null);
 const now = useNow({ interval: 500 });
@@ -36,7 +35,6 @@ const formattedTime = computed(() => {
 
 const startTimer = () => {
   if (!isTimerRunning.value) {
-    isTimerVisible.value = true;
     startTime.value = now.value.getTime();
     isTimerRunning.value = true;
   }
@@ -52,7 +50,6 @@ const stopTimer = () => {
 const resetTimer = () => {
   isTimerRunning.value = false;
   startTime.value = null;
-  isTimerVisible.value = false;
 };
 
 const toggleTimer = () => {
