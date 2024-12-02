@@ -1,15 +1,6 @@
 <template>
   <div class="page-sudoku _container _page">
-    <div class="page-sudoku__buttons">
-      <RouterLink
-        v-for="difficulty in Object.values(Difficulty)"
-        :to="{ name: RouteName.Sudoku, query: { difficulty } }"
-        :class="[BUTTON.default, difficulty === route.query.difficulty && BUTTON.ACTIVE]"
-        :key="difficulty"
-      >
-        {{ difficulty }}
-      </RouterLink>
-    </div>
+    <div class="page-sudoku__sudoku-timer"><GameTimer ref="gameTimer" /></div>
     <table class="page-sudoku__sudoku-grid">
       <tbody>
         <tr v-for="(row, rowIndex) in model" :key="rowIndex">
@@ -31,11 +22,22 @@
               class="page-sudoku__cell-input"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
+              @focus="startTimer"
             />
           </td>
         </tr>
       </tbody>
     </table>
+    <div class="page-sudoku__buttons">
+      <RouterLink
+        v-for="difficulty in Object.values(Difficulty)"
+        :to="{ name: RouteName.Sudoku, query: { difficulty } }"
+        :class="[BUTTON.default, difficulty === route.query.difficulty && BUTTON.ACTIVE]"
+        :key="difficulty"
+      >
+        {{ difficulty }}
+      </RouterLink>
+    </div>
   </div>
 </template>
 
@@ -50,10 +52,16 @@ import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
 import { RouteName } from '@/router';
 import { isNil } from '@/utils/isNil';
+import GameTimer from '@/components/GameTimer.vue';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
+const gameTimer = ref<InstanceType<typeof GameTimer> | null>(null);
 const model = ref<Sudoku['puzzle']>([]);
+
+const startTimer = () => {
+  gameTimer.value?.startTimer();
+};
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -82,6 +90,8 @@ watch(
       return goToPage404();
     }
 
+    gameTimer.value?.resetTimer();
+
     sudokuStore.getSudoku(difficulty).then((sudoku) => {
       model.value = sudoku.puzzle;
     });
@@ -92,6 +102,12 @@ watch(
 
 <style>
 .page-sudoku {
+  .page-sudoku__sudoku-timer {
+    display: flex;
+    /* background-color: var(--color-blue-100); */
+    justify-content: center;
+  }
+
   .page-sudoku__buttons {
     display: flex;
     gap: 0.625rem;
