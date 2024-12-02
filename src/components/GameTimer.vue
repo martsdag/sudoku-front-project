@@ -22,7 +22,7 @@ const isTimerRunning = ref(false);
 const isTimerVisible = ref(false);
 
 const startTime = ref<number | null>(null);
-const now = useNow({ interval: 1000 });
+const now = useNow({ interval: 500 });
 
 const formattedTime = computed(() => {
   if (!isTimerRunning.value || startTime.value === null) {
@@ -69,15 +69,13 @@ defineExpose({ resetTimer, startTimer });
 <style>
 .timer-container {
   display: flex;
-  gap: 0.3rem;
-  align-items: center;
   flex-direction: row-reverse;
 }
 
 .timer {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: bold;
-  margin-top: 5px;
+  padding: 0.25rem;
 }
 
 .icon {

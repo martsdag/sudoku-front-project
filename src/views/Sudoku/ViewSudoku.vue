@@ -104,7 +104,6 @@ watch(
 .page-sudoku {
   .page-sudoku__sudoku-timer {
     display: flex;
-    /* background-color: var(--color-blue-100); */
     justify-content: center;
   }
 
