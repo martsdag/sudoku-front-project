@@ -12,9 +12,11 @@
     "preview": "vite preview --host 0.0.0.0 --port 3000"
   },
   "dependencies": {
+    "@mdi/js": "^7.4.47",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^11.1.0",
+    "date-fns": "^4.1.0",
     "normalize.css": "^8.0.1",
     "ofetch": "^1.4.1",
     "pinia": "^2.2.4",
