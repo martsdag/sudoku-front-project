@@ -4,7 +4,7 @@
     <BaseIcon
       :path="mdiTimerOutline"
       class="game-timer__icon"
-      :class="{ 'game-timer__icon--active': isTimerRunning }"
+      :class="isTimerRunning && 'game-timer__icon--active'"
       @click="toggleTimer"
     />
   </div>
