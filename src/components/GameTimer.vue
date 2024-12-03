@@ -1,10 +1,10 @@
 <template>
-  <div class="timer-container">
-    <div class="timer">{{ formattedTime }}</div>
+  <div class="game-timer">
+    <div class="game-timer__time">{{ formattedTime }}</div>
     <BaseIcon
       :path="mdiTimerOutline"
-      class="icon"
-      :class="[{ active: isTimerRunning }, ICON.default]"
+      class="game-timer__icon"
+      :class="[{ 'game-timer__icon--active': isTimerRunning }, ICON.default]"
       @click="toggleTimer"
     />
   </div>
@@ -19,8 +19,8 @@ import { format } from 'date-fns';
 import { ICON } from '@/helpers/ui';
 
 const isTimerRunning = ref(false);
-
 const startTime = ref<number | null>(null);
+
 const now = useNow({ interval: 500 });
 
 const formattedTime = computed(() => {
@@ -64,18 +64,19 @@ defineExpose({ resetTimer, startTimer });
 </script>
 
 <style>
-.timer-container {
+.game-timer {
   display: flex;
   flex-direction: row-reverse;
 }
 
-.timer {
+.game-timer__time {
   font-size: 1.125rem;
   font-weight: bold;
   padding: 0.25rem;
+  color: var(--color-zinc-800);
 }
 
-.icon {
+.game-timer__icon {
   cursor: pointer;
   color: var(--color-blue-950);
   transition: color 0.3s ease;
@@ -83,9 +84,9 @@ defineExpose({ resetTimer, startTimer });
   &:hover {
     color: var(--color-blue-300);
   }
-}
 
-.icon.active {
-  color: var(--color-blue-500);
+  &.game-timer__icon--active {
+    color: var(--color-blue-500);
+  }
 }
 </style>
