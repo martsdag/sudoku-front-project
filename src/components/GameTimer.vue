@@ -4,7 +4,7 @@
     <BaseIcon
       :path="mdiTimerOutline"
       class="game-timer__icon"
-      :class="[{ 'game-timer__icon--active': isTimerRunning }, ICON.default]"
+      :class="{ 'game-timer__icon--active': isTimerRunning }"
       @click="toggleTimer"
     />
   </div>
@@ -16,7 +16,6 @@ import { mdiTimerOutline } from '@mdi/js';
 import BaseIcon from './BaseIcon/BaseIcon.vue';
 import { useNow } from '@vueuse/core';
 import { format } from 'date-fns';
-import { ICON } from '@/helpers/ui';
 
 const isTimerRunning = ref(false);
 const startTime = ref<number | null>(null);
