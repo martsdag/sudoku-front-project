@@ -1,12 +1,13 @@
 <template>
   <div class="page-sudoku _container _page">
     <div class="page-sudoku__sudoku-timer">
-      <BaseIcon
-        :path="mdiTimerOutline"
-        class="page-sudoku__sudoku-timer-icon"
-        :class="isActive && 'page-sudoku__sudoku-timer-icon--active'"
-        @click="toggleTimer"
-      />
+      <BaseButton
+        class="page-sudoku__sudoku-timer-button"
+        :class="isActive && 'page-sudoku__sudoku-timer-button--active'"
+        @click="onClickTimerIcon"
+      >
+        <BaseIcon :path="mdiTimerOutline" />
+      </BaseButton>
       <div class="page-sudoku__sudoku-timer-time">{{ formattedTime }}</div>
     </div>
     <table class="page-sudoku__sudoku-grid">
@@ -63,6 +64,7 @@ import { isNil } from '@/utils/isNil';
 import { useTimePassed } from '@/composables/useTimePassed';
 import { format } from 'date-fns';
 import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
+import BaseButton from '@/components/BaseButton/BaseButton.vue';
 import { mdiTimerOutline } from '@mdi/js';
 
 const route = useRoute();
@@ -71,17 +73,11 @@ const model = ref<Sudoku['puzzle']>([]);
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
-const formattedTime = computed(() => {
-  if (!timePassed.value) {
-    return '00:00';
-  }
-
-  return format(new Date(timePassed.value), 'mm:ss');
-});
+const formattedTime = computed(() => format(new Date(timePassed.value ?? 0), 'mm:ss'));
 
 const startTimer = () => start();
 
-const toggleTimer = () => {
+const onClickTimerIcon = () => {
   if (isActive.value) {
     stop();
   } else {
@@ -138,7 +134,8 @@ watch(
       color: var(--color-zinc-800);
     }
 
-    .page-sudoku__sudoku-timer-icon {
+    .page-sudoku__sudoku-timer-button {
+      all: unset;
       cursor: pointer;
       color: var(--color-blue-950);
       transition: color 0.3s ease;
@@ -146,7 +143,7 @@ watch(
       &:hover {
         color: var(--color-blue-300);
       }
-      &.page-sudoku__sudoku-timer-icon--active {
+      &.page-sudoku__sudoku-timer-button--active {
         color: var(--color-blue-500);
       }
     }

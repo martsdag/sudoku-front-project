@@ -15,16 +15,20 @@ export const useTimePassed = () => {
   });
 
   const start = () => {
-    if (!isActive.value) {
-      startTime.value = now.value.getTime();
-      isActive.value = true;
+    if (isActive.value) {
+      return;
     }
+
+    startTime.value = now.value.getTime();
+    isActive.value = true;
   };
 
   const stop = () => {
-    if (isActive.value) {
-      isActive.value = false;
+    if (!isActive.value) {
+      return;
     }
+
+    isActive.value = false;
   };
 
   const reset = () => {
