@@ -1,6 +1,14 @@
 <template>
   <div class="page-sudoku _container _page">
-    <div class="page-sudoku__sudoku-timer"><GameTimer ref="gameTimer" /></div>
+    <div class="page-sudoku__sudoku-timer">
+      <BaseIcon
+        :path="mdiTimerOutline"
+        class="page-sudoku__sudoku-timer-icon"
+        :class="isActive && 'page-sudoku__sudoku-timer-icon--active'"
+        @click="toggleTimer"
+      />
+      <div class="page-sudoku__sudoku-timer-time">{{ formattedTime }}</div>
+    </div>
     <table class="page-sudoku__sudoku-grid">
       <tbody>
         <tr v-for="(row, rowIndex) in model" :key="rowIndex">
@@ -42,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
@@ -52,15 +60,33 @@ import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
 import { RouteName } from '@/router';
 import { isNil } from '@/utils/isNil';
-import GameTimer from '@/components/GameTimer.vue';
+import { useTimePassed } from '@/composables/useTimePassed';
+import { format } from 'date-fns';
+import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
+import { mdiTimerOutline } from '@mdi/js';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
-const gameTimer = ref<InstanceType<typeof GameTimer> | null>(null);
 const model = ref<Sudoku['puzzle']>([]);
 
-const startTimer = () => {
-  gameTimer.value?.startTimer();
+const { timePassed, start, reset, stop, isActive } = useTimePassed();
+
+const formattedTime = computed(() => {
+  if (!timePassed.value) {
+    return '00:00';
+  }
+
+  return format(new Date(timePassed.value), 'mm:ss');
+});
+
+const startTimer = () => start();
+
+const toggleTimer = () => {
+  if (isActive.value) {
+    stop();
+  } else {
+    start();
+  }
 };
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
@@ -90,10 +116,9 @@ watch(
       return goToPage404();
     }
 
-    gameTimer.value?.resetTimer();
-
     sudokuStore.getSudoku(difficulty).then((sudoku) => {
       model.value = sudoku.puzzle;
+      reset();
     });
   },
   { immediate: true },
@@ -105,6 +130,26 @@ watch(
   .page-sudoku__sudoku-timer {
     display: flex;
     justify-content: center;
+
+    .page-sudoku__sudoku-timer-time {
+      font-size: 1.125rem;
+      font-weight: bold;
+      padding: 0.25rem;
+      color: var(--color-zinc-800);
+    }
+
+    .page-sudoku__sudoku-timer-icon {
+      cursor: pointer;
+      color: var(--color-blue-950);
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--color-blue-300);
+      }
+      &.page-sudoku__sudoku-timer-icon--active {
+        color: var(--color-blue-500);
+      }
+    }
   }
 
   .page-sudoku__buttons {
