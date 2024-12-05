@@ -1,14 +1,14 @@
 <template>
   <div class="page-sudoku _container _page">
-    <div class="page-sudoku__buttons">
-      <RouterLink
-        v-for="difficulty in Object.values(Difficulty)"
-        :to="{ name: RouteName.Sudoku, query: { difficulty } }"
-        :class="[BUTTON.default, difficulty === route.query.difficulty && BUTTON.ACTIVE]"
-        :key="difficulty"
+    <div class="page-sudoku__sudoku-timer">
+      <BaseButton
+        class="page-sudoku__sudoku-timer-button"
+        :class="isActive && 'page-sudoku__sudoku-timer-button--active'"
+        @click="onClickTimerIcon"
       >
-        {{ difficulty }}
-      </RouterLink>
+        <BaseIcon :path="mdiTimerOutline" />
+      </BaseButton>
+      <div class="page-sudoku__sudoku-timer-time">{{ formattedTime }}</div>
     </div>
     <table class="page-sudoku__sudoku-grid">
       <tbody>
@@ -31,16 +31,27 @@
               class="page-sudoku__cell-input"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
+              @focus="onFocus"
             />
           </td>
         </tr>
       </tbody>
     </table>
+    <div class="page-sudoku__buttons">
+      <RouterLink
+        v-for="difficulty in Object.values(Difficulty)"
+        :to="{ name: RouteName.Sudoku, query: { difficulty } }"
+        :class="[BUTTON.default, difficulty === route.query.difficulty && BUTTON.ACTIVE]"
+        :key="difficulty"
+      >
+        {{ difficulty }}
+      </RouterLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
@@ -50,10 +61,31 @@ import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
 import { RouteName } from '@/router';
 import { isNil } from '@/utils/isNil';
+import { useTimePassed } from '@/composables/useTimePassed';
+import { format } from 'date-fns';
+import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
+import BaseButton from '@/components/BaseButton/BaseButton.vue';
+import { mdiTimerOutline } from '@mdi/js';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+
+const { timePassed, start, reset, stop, isActive } = useTimePassed();
+
+const formattedTime = computed(() => format(new Date(timePassed.value ?? 0), 'mm:ss'));
+
+const onFocus = (event: FocusEvent) => {
+  const input = event.target as HTMLInputElement;
+
+  if (input.readOnly) {
+    return;
+  }
+
+  start();
+};
+
+const onClickTimerIcon = () => (isActive.value ? stop() : start());
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
@@ -84,6 +116,7 @@ watch(
 
     sudokuStore.getSudoku(difficulty).then((sudoku) => {
       model.value = sudoku.puzzle;
+      reset();
     });
   },
   { immediate: true },
@@ -92,6 +125,32 @@ watch(
 
 <style>
 .page-sudoku {
+  .page-sudoku__sudoku-timer {
+    display: flex;
+    justify-content: center;
+
+    .page-sudoku__sudoku-timer-time {
+      font-size: 1.125rem;
+      font-weight: bold;
+      padding: 0.25rem;
+      color: var(--color-zinc-800);
+    }
+
+    .page-sudoku__sudoku-timer-button {
+      all: unset;
+      cursor: pointer;
+      color: var(--color-blue-950);
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--color-blue-300);
+      }
+      &.page-sudoku__sudoku-timer-button--active {
+        color: var(--color-blue-500);
+      }
+    }
+  }
+
   .page-sudoku__buttons {
     display: flex;
     gap: 0.625rem;
