@@ -78,7 +78,7 @@ const formattedTime = computed(() => format(new Date(timePassed.value ?? 0), 'mm
 const onFocus = (event: FocusEvent) => {
   const input = event.target as HTMLInputElement;
 
-  if (!input.readOnly) {
+  if (input.readOnly) {
     return;
   }
 
