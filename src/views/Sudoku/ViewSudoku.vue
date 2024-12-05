@@ -79,17 +79,13 @@ const onFocus = (event: FocusEvent) => {
   const input = event.target as HTMLInputElement;
 
   if (!input.readOnly) {
-    start();
+    return;
   }
+
+  start();
 };
 
-const onClickTimerIcon = () => {
-  if (isActive.value) {
-    stop();
-  } else {
-    start();
-  }
-};
+const onClickTimerIcon = () => (isActive.value ? stop() : start());
 
 const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   const sanitizedValue = (event.target as HTMLInputElement).value.replace(/[^1-9]/g, '');
