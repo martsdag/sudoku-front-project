@@ -31,7 +31,7 @@
               class="page-sudoku__cell-input"
               :readonly="/\d/.test(String(sudokuStore.sudoku.puzzle?.[rowIndex]?.[colIndex]))"
               @input="(event) => onInput(event, [rowIndex, colIndex])"
-              @focus="startTimer"
+              @focus="onFocus"
             />
           </td>
         </tr>
@@ -75,7 +75,13 @@ const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
 const formattedTime = computed(() => format(new Date(timePassed.value ?? 0), 'mm:ss'));
 
-const startTimer = () => start();
+const onFocus = (event: FocusEvent) => {
+  const input = event.target as HTMLInputElement;
+
+  if (!input.readOnly) {
+    start();
+  }
+};
 
 const onClickTimerIcon = () => {
   if (isActive.value) {
