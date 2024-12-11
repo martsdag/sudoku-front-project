@@ -47,6 +47,15 @@
         {{ difficulty }}
       </RouterLink>
     </div>
+    <BaseDialog v-show="isWin" :isHiddenFooter="true" ref="baseDialog"
+      ><img
+        src="https://sun9-30.userapi.com/impg/BilaDAnL9QNr9KnMxRUyJua9UaBdH7MX0DT9pQ/G0qoAL3Otfs.jpg?size=800x600&quality=96&sign=5b39b7aad66b3f31d55683764ed3e7eb&type=album"
+        alt="Victory image"
+      />
+      <div class="page-sudoku__button-container">
+        <BaseButton class="page-sudoku__modal-ok-button" @click="close">ОК</BaseButton>
+      </div></BaseDialog
+    >
   </div>
 </template>
 
@@ -65,11 +74,23 @@ import { useTimePassed } from '@/composables/useTimePassed';
 import { format } from 'date-fns';
 import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
+import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
 import { mdiTimerOutline } from '@mdi/js';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+const baseDialog = ref<InstanceType<typeof BaseDialog> | null>(null);
+
+const isWin = computed(() => sudokuStore.validationResult.isWin);
+
+const open = () => {
+  baseDialog.value?.open();
+};
+
+const close = () => {
+  baseDialog.value?.close();
+};
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
@@ -121,6 +142,18 @@ watch(
   },
   { immediate: true },
 );
+
+watch(
+  () => sudokuStore.validationResult.isWin,
+  (newValue) => {
+    if (newValue) {
+      open();
+    } else {
+      close();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style>
@@ -151,55 +184,75 @@ watch(
     }
   }
 
-  .page-sudoku__buttons {
+  .page-sudoku__button_container {
     display: flex;
-    gap: 0.625rem;
-    justify-content: center;
-    padding: 1rem;
+    justify-content: end;
   }
 
-  .page-sudoku__sudoku-grid {
-    display: flex;
-    justify-content: center;
-    border-collapse: collapse;
-    background-color: var(--color-white);
-  }
+  .page-sudoku__modal-ok-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: var(--color-blue-300);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 30px;
 
-  .page-sudoku__sudoku-cell {
-    --cell-size: 1.2em;
-    width: var(--cell-size);
-    height: var(--cell-size);
-    border: 1px solid var(--color-black);
-    text-align: center;
-    font-size: 1.5rem;
-
-    &.page-sudoku__sudoku-cell_bold-border-bottom {
-      border-bottom-width: 0.125rem;
-    }
-
-    &.page-sudoku__sudoku-cell_bold-border-right {
-      border-right-width: 0.125rem;
-    }
-
-    &.page-sudoku__sudoku-cell_error {
-      &:has(.page-sudoku__cell-input[readonly]) {
-        background-color: var(--color-red-200);
-      }
-
-      .page-sudoku__cell-input:not([readonly]) {
-        color: var(--color-red-600);
-      }
+    &:hover {
+      background-color: var(--color-blue-400);
     }
   }
+}
 
-  .page-sudoku__cell-input {
-    all: unset;
-    width: inherit;
+.page-sudoku__buttons {
+  display: flex;
+  gap: 0.625rem;
+  justify-content: center;
+  padding: 1rem;
+}
 
-    &:not([readonly]) {
-      font-family: 'Kalam', cursive;
-      color: var(--color-blue-900);
+.page-sudoku__sudoku-grid {
+  display: flex;
+  justify-content: center;
+  border-collapse: collapse;
+  background-color: var(--color-white);
+}
+
+.page-sudoku__sudoku-cell {
+  --cell-size: 1.2em;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid var(--color-black);
+  text-align: center;
+  font-size: 1.5rem;
+
+  &.page-sudoku__sudoku-cell_bold-border-bottom {
+    border-bottom-width: 0.125rem;
+  }
+
+  &.page-sudoku__sudoku-cell_bold-border-right {
+    border-right-width: 0.125rem;
+  }
+
+  &.page-sudoku__sudoku-cell_error {
+    &:has(.page-sudoku__cell-input[readonly]) {
+      background-color: var(--color-red-200);
     }
+
+    .page-sudoku__cell-input:not([readonly]) {
+      color: var(--color-red-600);
+    }
+  }
+}
+
+.page-sudoku__cell-input {
+  all: unset;
+  width: inherit;
+
+  &:not([readonly]) {
+    font-family: 'Kalam', cursive;
+    color: var(--color-blue-900);
   }
 }
 </style>

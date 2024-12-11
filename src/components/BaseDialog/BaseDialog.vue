@@ -5,7 +5,7 @@
         <div class="dialog__header">
           <span v-if="title" class="dialog__header-title">{{ title }}</span>
           <BaseButton class="dialog__close-button" @click="onClickCloseIcon">
-            <BaseIcon :path="mdiClose" ICON.SIZE.LG />
+            <BaseIcon :path="mdiClose" />
           </BaseButton>
         </div>
       </slot>
