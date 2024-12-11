@@ -47,15 +47,9 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <BaseDialog v-show="isWin" :isHiddenFooter="true" ref="baseDialog"
-      ><img
-        src="https://sun9-30.userapi.com/impg/BilaDAnL9QNr9KnMxRUyJua9UaBdH7MX0DT9pQ/G0qoAL3Otfs.jpg?size=800x600&quality=96&sign=5b39b7aad66b3f31d55683764ed3e7eb&type=album"
-        alt="Victory image"
-      />
-      <div class="page-sudoku__modal-button-container">
-        <BaseButton class="page-sudoku__modal-ok-button" @click="close">ОК</BaseButton>
-      </div></BaseDialog
-    >
+    <BaseDialog isHiddenFooter ref="baseDialog">
+      <img src="/src/assets/images/victory.jpg" alt="Victory image" />
+    </BaseDialog>
   </div>
 </template>
 
@@ -82,14 +76,8 @@ const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
 const baseDialog = ref<InstanceType<typeof BaseDialog> | null>(null);
 
-const isWin = computed(() => sudokuStore.validationResult.isWin);
-
 const open = () => {
   baseDialog.value?.open();
-};
-
-const close = () => {
-  baseDialog.value?.close();
 };
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
@@ -121,7 +109,11 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
   row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
 
-  sudokuStore.getValidateSudoku(model.value);
+  sudokuStore.getValidateSudoku(model.value).then((validationResult) => {
+    if (validationResult.isWin) {
+      open();
+    }
+  });
 
   nextTick(() => {
     (event.target as HTMLInputElement).value = sanitizedValue;
@@ -141,18 +133,6 @@ watch(
       model.value = sudoku.puzzle;
       reset();
     });
-  },
-  { immediate: true },
-);
-
-watch(
-  () => sudokuStore.validationResult.isWin,
-  (newValue) => {
-    if (newValue) {
-      open();
-    } else {
-      close();
-    }
   },
   { immediate: true },
 );
