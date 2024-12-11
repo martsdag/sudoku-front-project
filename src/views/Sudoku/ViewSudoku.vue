@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
@@ -75,7 +75,7 @@ import { toId } from '@/types';
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const baseDialog = ref();
+const baseDialog = useTemplateRef('baseDialog');
 
 const open = () => {
   baseDialog.value?.open();
