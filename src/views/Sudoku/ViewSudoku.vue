@@ -104,6 +104,8 @@ const onFocus = (event: FocusEvent) => {
   }
 
   start();
+
+  input.setSelectionRange(input.value.length, input.value.length);
 };
 
 const onClickTimerIcon = () => (isActive.value ? stop() : start());
