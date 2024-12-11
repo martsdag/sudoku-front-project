@@ -186,33 +186,12 @@ watch(
     }
   }
 
-  .page-sudoku__modal-button-container {
+  .page-sudoku__buttons {
     display: flex;
-    justify-content: end;
+    gap: 0.625rem;
+    justify-content: center;
+    padding: 1rem;
   }
-
-  .page-sudoku__modal-ok-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    background-color: var(--color-blue-300);
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 30px;
-
-    &:hover {
-      background-color: var(--color-blue-400);
-    }
-  }
-}
-
-.page-sudoku__buttons {
-  display: flex;
-  gap: 0.625rem;
-  justify-content: center;
-  padding: 1rem;
-}
 
   .page-sudoku__sudoku-grid {
     display: flex;
