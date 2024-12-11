@@ -47,7 +47,7 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <BaseDialog isHiddenFooter ref="baseDialog">
+    <BaseDialog :buttons="[{ id: toId(0), text: 'OK', onClick: close }]" ref="baseDialog">
       <img src="/src/assets/images/victory.jpg" alt="Victory image" />
     </BaseDialog>
   </div>
@@ -70,14 +70,19 @@ import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
 import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
 import { mdiTimerOutline } from '@mdi/js';
+import { toId } from '@/types';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const baseDialog = ref<InstanceType<typeof BaseDialog> | null>(null);
+const baseDialog = ref();
 
 const open = () => {
   baseDialog.value?.open();
+};
+
+const close = () => {
+  baseDialog.value?.close();
 };
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();

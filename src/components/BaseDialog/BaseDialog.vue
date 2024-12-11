@@ -1,22 +1,20 @@
 <template>
-  <dialog class="_container dialog" ref="dialog" @close="onClose" @cancel.prevent="onClose">
+  <dialog class="dialog _container" ref="dialog" @close="onClose" @cancel.prevent="onClose">
     <div class="dialog__inner" ref="dialogInner">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="dialog__header">
-          <span v-if="title" class="dialog__header-title">{{ title }}</span>
-          <BaseButton class="dialog__close-button" @click="onClickCloseIcon">
-            <BaseIcon :path="mdiClose" />
-          </BaseButton>
+          <span v-if="isNotNil(title)" class="dialog__title">{{ title }}</span>
+          <LazyBaseButton class="dialog__button-close" @click="onClickCloseIcon">
+            <LazyBaseIcon :path="mdiClose" />
+          </LazyBaseButton>
         </div>
       </slot>
-
       <slot v-bind="{ close }" />
-
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
-        <div v-if="buttons.length" class="dialog__footer">
-          <BaseButton v-for="(button, index) in buttons" :key="index" @click="button.onClick">
+        <div v-if="isNotEmptyArray(buttons)" class="dialog__footer">
+          <LazyBaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
-          </BaseButton>
+          </LazyBaseButton>
         </div>
       </slot>
     </div>
@@ -24,64 +22,75 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount, useTemplateRef, type PropType } from 'vue';
+import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } from 'vue';
 import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
-import BaseButton from '@/components/BaseButton/BaseButton.vue';
-import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
+import { isNotEmptyArray, isNotNil } from '@/utils';
+import type { FunctionCallback, WithId } from '@/types';
+import { MAIN } from '@/constants/selectors';
+
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/BaseButton'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/BaseIcon'));
 
 const dialog = useTemplateRef('dialog');
 const dialogInner = useTemplateRef('dialogInner');
 
-const isLocked = useScrollLock(document.getElementById('main'));
+const isLocked = useScrollLock(document.getElementById(MAIN));
 const toggleIsLocked = useToggle(isLocked);
 
-interface Button {
+interface Button extends WithId {
   text: string;
-  onClick: () => void;
+  onClick: FunctionCallback;
 }
 
-const props = defineProps({
-  title: String,
-  buttons: {
-    type: Array as PropType<Button[]>,
-    default: () => [],
-  },
-  isHiddenHeader: Boolean,
-  isHiddenFooter: Boolean,
-});
+const props = defineProps<
+  Partial<{
+    title: string;
+    buttons: Array<Button>;
+    isHiddenHeader: boolean;
+    isHiddenFooter: boolean;
+  }>
+>();
 
-const emit = defineEmits(['open', 'close', 'confirm', 'cancel']);
+const emit = defineEmits<{
+  open: [];
+  close: [];
+  confirm: [];
+  cancel: [];
+}>();
 
-const buttons = computed(() =>
-  props.buttons.length
-    ? props.buttons
-    : [
-        {
-          text: 'Cancel',
-          onClick: () => {
-            emit('cancel');
-            close();
-          },
+const buttons = computed(
+  () =>
+    props.buttons ?? [
+      {
+        id: 0,
+        text: 'cancel',
+        onClick: () => {
+          emit('cancel');
+          close();
         },
-        {
-          text: 'Confirm',
-          onClick: () => {
-            emit('confirm');
-            close();
-          },
+      },
+      {
+        id: 1,
+        text: 'confirm',
+        onClick: () => {
+          emit('confirm');
+          close();
         },
-      ],
+      },
+    ],
 );
 
-const isOpened = ref(false);
+const isOpened = ref(Boolean(dialog.value?.open));
 
 useMutationObserver(
   dialog,
   () => {
     isOpened.value = Boolean(dialog.value?.open);
   },
-  { attributes: true },
+  {
+    attributes: true,
+  },
 );
 
 const open = () => {
@@ -131,51 +140,51 @@ defineExpose({
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.33);
   }
-}
 
-.dialog__inner {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  scrollbar-gutter: stable both-edges;
-}
-
-.dialog__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.dialog__header-title {
-  font-size: 18px;
-}
-
-.dialog__close-button {
-  all: unset;
-  cursor: pointer;
-  color: var(--color-blue-900);
-  width: 25px;
-  height: 25px;
-  margin-inline-start: auto;
-
-  &:hover {
-    color: var(--color-blue-950);
-    background-color: var(--color-zinc-200);
-    border-radius: 20px;
+  .dialog__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    scrollbar-gutter: stable both-edges;
   }
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
+  .dialog__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
   }
-}
 
-.dialog__footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 10px;
+  .dialog__title {
+    font-size: 18px;
+  }
+
+  .dialog__button-close {
+    all: unset;
+    cursor: pointer;
+    color: var(--color-blue-900);
+    width: 25px;
+    height: 25px;
+    margin-inline-start: auto;
+
+    &:hover {
+      color: var(--color-blue-950);
+      background-color: var(--color-zinc-200);
+      border-radius: 20px;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 10px;
+  }
 }
 </style>
