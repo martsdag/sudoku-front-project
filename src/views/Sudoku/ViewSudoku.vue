@@ -186,75 +186,55 @@ watch(
     }
   }
 
-  .page-sudoku__button_container {
+  .page-sudoku__buttons {
     display: flex;
-    justify-content: end;
+    gap: 0.625rem;
+    justify-content: center;
+    padding: 1rem;
   }
 
-  .page-sudoku__modal-ok-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    background-color: var(--color-blue-300);
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 30px;
-
-    &:hover {
-      background-color: var(--color-blue-400);
-    }
-  }
-}
-
-.page-sudoku__buttons {
-  display: flex;
-  gap: 0.625rem;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.page-sudoku__sudoku-grid {
-  display: flex;
-  justify-content: center;
-  border-collapse: collapse;
-  background-color: var(--color-white);
-}
-
-.page-sudoku__sudoku-cell {
-  --cell-size: 1.2em;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  border: 1px solid var(--color-black);
-  text-align: center;
-  font-size: 1.5rem;
-
-  &.page-sudoku__sudoku-cell_bold-border-bottom {
-    border-bottom-width: 0.125rem;
+  .page-sudoku__sudoku-grid {
+    display: flex;
+    justify-content: center;
+    border-collapse: collapse;
+    background-color: var(--color-white);
   }
 
-  &.page-sudoku__sudoku-cell_bold-border-right {
-    border-right-width: 0.125rem;
-  }
+  .page-sudoku__sudoku-cell {
+    --cell-size: 1.2em;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid var(--color-black);
+    text-align: center;
+    font-size: 1.5rem;
 
-  &.page-sudoku__sudoku-cell_error {
-    &:has(.page-sudoku__cell-input[readonly]) {
-      background-color: var(--color-red-200);
+    &.page-sudoku__sudoku-cell_bold-border-bottom {
+      border-bottom-width: 0.125rem;
     }
 
-    .page-sudoku__cell-input:not([readonly]) {
-      color: var(--color-red-600);
+    &.page-sudoku__sudoku-cell_bold-border-right {
+      border-right-width: 0.125rem;
+    }
+
+    &.page-sudoku__sudoku-cell_error {
+      &:has(.page-sudoku__cell-input[readonly]) {
+        background-color: var(--color-red-200);
+      }
+
+      .page-sudoku__cell-input:not([readonly]) {
+        color: var(--color-red-600);
+      }
     }
   }
-}
 
-.page-sudoku__cell-input {
-  all: unset;
-  width: inherit;
+  .page-sudoku__cell-input {
+    all: unset;
+    width: inherit;
 
-  &:not([readonly]) {
-    font-family: 'Kalam', cursive;
-    color: var(--color-blue-900);
+    &:not([readonly]) {
+      font-family: 'Kalam', cursive;
+      color: var(--color-blue-900);
+    }
   }
 }
 </style>
