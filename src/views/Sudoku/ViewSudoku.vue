@@ -52,7 +52,7 @@
         src="https://sun9-30.userapi.com/impg/BilaDAnL9QNr9KnMxRUyJua9UaBdH7MX0DT9pQ/G0qoAL3Otfs.jpg?size=800x600&quality=96&sign=5b39b7aad66b3f31d55683764ed3e7eb&type=album"
         alt="Victory image"
       />
-      <div class="page-sudoku__button-container">
+      <div class="page-sudoku__modal-button-container">
         <BaseButton class="page-sudoku__modal-ok-button" @click="close">ОК</BaseButton>
       </div></BaseDialog
     >
@@ -186,12 +186,33 @@ watch(
     }
   }
 
-  .page-sudoku__buttons {
+  .page-sudoku__modal-button-container {
     display: flex;
-    gap: 0.625rem;
-    justify-content: center;
-    padding: 1rem;
+    justify-content: end;
   }
+
+  .page-sudoku__modal-ok-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: var(--color-blue-300);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 30px;
+
+    &:hover {
+      background-color: var(--color-blue-400);
+    }
+  }
+}
+
+.page-sudoku__buttons {
+  display: flex;
+  gap: 0.625rem;
+  justify-content: center;
+  padding: 1rem;
+}
 
   .page-sudoku__sudoku-grid {
     display: flex;
