@@ -1,13 +1,3 @@
-export interface WithId {
-  id: Id;
-}
-
-export type Id = (string | number) & { readonly Id: unique symbol };
-
-export const toId = (id: Omit<Id, 'Id'>): Id => id as Id;
-
-export type NotEmptyArray<T> = [T, ...Array<T>];
-
 export type ObjectValue<TObject extends object> = TObject[keyof TObject];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

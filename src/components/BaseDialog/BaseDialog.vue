@@ -11,7 +11,7 @@
       </slot>
       <slot v-bind="{ close }" />
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
-        <div v-if="isNotEmptyArray(buttons)" class="dialog__footer">
+        <div v-if="buttons.length > 0" class="dialog__footer">
           <LazyBaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
           </LazyBaseButton>
@@ -25,8 +25,8 @@
 import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } from 'vue';
 import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
-import { isNotEmptyArray, isNotNil } from '@/utils';
-import type { FunctionCallback, WithId } from '@/types';
+import { isNotNil } from '@/utils/isNotNil';
+import type { FunctionCallback } from '@/types';
 import { MAIN } from '@/constants/selectors';
 
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/BaseButton'));
@@ -38,7 +38,8 @@ const dialogInner = useTemplateRef('dialogInner');
 const isLocked = useScrollLock(document.getElementById(MAIN));
 const toggleIsLocked = useToggle(isLocked);
 
-interface Button extends WithId {
+interface Button {
+  id: number | string;
   text: string;
   onClick: FunctionCallback;
 }

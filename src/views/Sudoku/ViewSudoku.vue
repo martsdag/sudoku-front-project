@@ -47,7 +47,7 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <BaseDialog :buttons="[{ id: toId(0), text: 'OK', onClick: close }]" ref="baseDialog">
+    <BaseDialog :buttons="[{ id: 2, text: 'OK', onClick: close }]" ref="baseDialog">
       <img src="/src/assets/images/victory.jpg" alt="Victory image" />
     </BaseDialog>
   </div>
@@ -70,7 +70,6 @@ import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
 import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
 import { mdiTimerOutline } from '@mdi/js';
-import { toId } from '@/types';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
