@@ -47,7 +47,7 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <BaseDialog :buttons="[{ id: 2, text: 'OK', onClick: close }]" ref="baseDialog">
+    <BaseDialog :buttons="[{ id: 0, text: 'OK', onClick: close }]" ref="baseDialog">
       <img src="/src/assets/images/victory.jpg" alt="Victory image" />
     </BaseDialog>
   </div>
@@ -129,6 +129,7 @@ watch(
   () => {
     const difficulty = route.query.difficulty;
 
+    //можно просто убрать goToPage404, тогда не будет переадресации на страницу 404
     if (!isDifficulty(difficulty)) {
       return goToPage404();
     }
