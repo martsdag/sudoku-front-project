@@ -27,7 +27,6 @@ import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@
 import { mdiClose } from '@mdi/js';
 import { isNotNil } from '@/utils/isNotNil';
 import type { FunctionCallback } from '@/types';
-import { MAIN } from '@/constants/selectors';
 
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/BaseButton'));
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/BaseIcon'));
@@ -35,7 +34,7 @@ const LazyBaseIcon = defineAsyncComponent(() => import('@/components/BaseIcon'))
 const dialog = useTemplateRef('dialog');
 const dialogInner = useTemplateRef('dialogInner');
 
-const isLocked = useScrollLock(document.getElementById(MAIN));
+const isLocked = useScrollLock(document.body);
 const toggleIsLocked = useToggle(isLocked);
 
 interface Button {

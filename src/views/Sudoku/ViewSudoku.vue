@@ -129,7 +129,6 @@ watch(
   () => {
     const difficulty = route.query.difficulty;
 
-    //можно просто убрать goToPage404, тогда не будет переадресации на страницу 404
     if (!isDifficulty(difficulty)) {
       return goToPage404();
     }
