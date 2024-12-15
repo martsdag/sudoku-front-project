@@ -47,11 +47,14 @@
         {{ difficulty }}
       </RouterLink>
     </div>
+    <BaseDialog :buttons="[{ id: 0, text: 'OK', onClick: close }]" ref="baseDialog">
+      <img src="/src/assets/images/victory.jpg" alt="Victory image" />
+    </BaseDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
@@ -65,11 +68,21 @@ import { useTimePassed } from '@/composables/useTimePassed';
 import { format } from 'date-fns';
 import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
+import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
 import { mdiTimerOutline } from '@mdi/js';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
+const baseDialog = useTemplateRef('baseDialog');
+
+const open = () => {
+  baseDialog.value?.open();
+};
+
+const close = () => {
+  baseDialog.value?.close();
+};
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
@@ -83,6 +96,8 @@ const onFocus = (event: FocusEvent) => {
   }
 
   start();
+
+  input.setSelectionRange(input.value.length, input.value.length);
 };
 
 const onClickTimerIcon = () => (isActive.value ? stop() : start());
@@ -98,7 +113,11 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
   row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
 
-  sudokuStore.getValidateSudoku(model.value);
+  sudokuStore.getValidateSudoku(model.value).then((validationResult) => {
+    if (validationResult.isWin) {
+      open();
+    }
+  });
 
   nextTick(() => {
     (event.target as HTMLInputElement).value = sanitizedValue;
