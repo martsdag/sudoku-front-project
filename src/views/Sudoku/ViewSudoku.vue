@@ -116,6 +116,7 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
   sudokuStore.getValidateSudoku(model.value).then((validationResult) => {
     if (validationResult.isWin) {
       open();
+      stop();
     }
   });
 
