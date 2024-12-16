@@ -157,15 +157,17 @@ defineExpose({
   }
 
   .dialog__title {
-    font-size: 18px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-zinc-800);
   }
 
   .dialog__button-close {
     all: unset;
     cursor: pointer;
     color: var(--color-blue-900);
-    width: 25px;
-    height: 25px;
+    width: 1.5rem;
+    height: 1.5rem;
     margin-inline-start: auto;
 
     &:hover {
@@ -184,7 +186,7 @@ defineExpose({
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-    margin-top: 10px;
+    margin-top: 0.625rem;
   }
 }
 </style>
