@@ -50,12 +50,23 @@
     <BaseDialog :buttons="[{ id: 0, text: 'OK', onClick: close }]" ref="baseDialog">
       <img src="/src/assets/images/victory.jpg" alt="Victory image" />
     </BaseDialog>
+    <BaseDialog
+      class="page-sudoku__dialog-new-game"
+      title="Начать новую игру"
+      :buttons="[
+        { id: 1, text: 'OK', onClick: resetGame },
+        { id: 2, text: 'Отмена', onClick: close },
+      ]"
+      ref="baseDialog"
+    >
+      <p class="page-sudoku__dialog-new-game-description">Прогресс текущей игры будет потерян</p>
+    </BaseDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, nextTick, ref, useTemplateRef, watch, onBeforeUnmount } from 'vue';
+import { onBeforeRouteLeave, useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
@@ -75,6 +86,7 @@ const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
 const baseDialog = useTemplateRef('baseDialog');
+const newDifficulty = ref();
 
 const open = () => {
   baseDialog.value?.open();
@@ -87,6 +99,32 @@ const close = () => {
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
 const formattedTime = computed(() => format(new Date(timePassed.value ?? 0), 'mm:ss'));
+
+const hasProgress = computed(() =>
+  model.value.some((row, rowIndex) =>
+    row?.some((cell, colIndex) =>
+      sudokuStore.sudoku.puzzle[rowIndex] ? cell !== sudokuStore.sudoku.puzzle[rowIndex][colIndex] : false,
+    ),
+  ),
+);
+
+const loadNewGame = async (difficulty: Difficulty) => {
+  const sudoku = await sudokuStore.getSudoku(difficulty);
+
+  model.value = [...sudoku.puzzle];
+  reset();
+  stop();
+};
+
+const resetGame = async () => {
+  if (!newDifficulty.value) {
+    return;
+  }
+
+  await loadNewGame(newDifficulty.value);
+  newDifficulty.value = null;
+  close();
+};
 
 const onFocus = (event: FocusEvent) => {
   const input = event.target as HTMLInputElement;
@@ -127,20 +165,51 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
 watch(
   () => route.query.difficulty,
-  () => {
+  async () => {
     const difficulty = route.query.difficulty;
 
     if (!isDifficulty(difficulty)) {
       return goToPage404();
     }
 
-    sudokuStore.getSudoku(difficulty).then((sudoku) => {
-      model.value = sudoku.puzzle;
-      reset();
-    });
+    if (hasProgress.value) {
+      newDifficulty.value = difficulty;
+      open();
+    } else {
+      await loadNewGame(difficulty as Difficulty);
+    }
   },
   { immediate: true },
 );
+
+onBeforeRouteLeave((to, from, next) => {
+  const answer = window.confirm('Вы действительно хотите уйти? У вас есть несохраненные изменения!');
+
+  if (answer) {
+    next();
+  } else {
+    next(false);
+  }
+});
+
+const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  if (hasProgress.value) {
+    event.preventDefault();
+    event.returnValue = '';
+  }
+};
+
+watch(hasProgress, (progress) => {
+  if (progress) {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  } else {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  }
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+});
 </script>
 
 <style>
@@ -169,6 +238,18 @@ watch(
         color: var(--color-blue-500);
       }
     }
+  }
+
+  .page-sudoku__dialog-new-game {
+    max-width: 400px;
+    max-height: 200px;
+  }
+
+  .page-sudoku__dialog-new-game-description {
+    all: unset;
+    padding-bottom: 10px;
+    color: var(--color-zinc-700);
+    font-weight: 400;
   }
 
   .page-sudoku__buttons {
