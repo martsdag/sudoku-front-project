@@ -3,8 +3,8 @@
     class="page-sudoku__dialog-new-game"
     title="Начать новую игру"
     :buttons="[
-      { id: 1, text: 'OK', onClick: confirmDialog },
-      { id: 2, text: 'Отмена', onClick: closeDialog },
+      { id: 1, text: 'OK', onClick: onConfirm },
+      { id: 2, text: 'Отмена', onClick: onCancel },
     ]"
     ref="baseDialog"
   >
@@ -14,32 +14,33 @@
 
 <script setup lang="ts">
 import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
+import { useConfirmDialog } from '@vueuse/core';
 import { useTemplateRef } from 'vue';
 
 const baseDialog = useTemplateRef('baseDialog');
-let resolveDialog: ((value: boolean) => void) | null = null;
 
-const confirmDialog = () => {
-  resolveDialog?.(true);
-  closeDialog();
-};
+const { reveal, confirm, cancel } = useConfirmDialog();
 
-const closeDialog = () => {
-  resolveDialog?.(false);
+const onConfirm = () => {
+  confirm();
   baseDialog.value?.close();
 };
 
-const openDialog = () => {
+const onCancel = () => {
+  cancel();
+  baseDialog.value?.close();
+};
+
+const openDialog = async () => {
   baseDialog.value?.open();
 
-  return new Promise<boolean>((resolve) => {
-    resolveDialog = resolve;
-  });
+  const { isCanceled } = await reveal();
+
+  return !isCanceled;
 };
 
 defineExpose({
   openDialog,
-  closeDialog,
 });
 </script>
 
