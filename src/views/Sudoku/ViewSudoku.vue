@@ -47,26 +47,15 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <BaseDialog :buttons="[{ id: 0, text: 'OK', onClick: close }]" ref="baseDialog">
-      <img src="/src/assets/images/victory.jpg" alt="Victory image" />
-    </BaseDialog>
-    <BaseDialog
-      class="page-sudoku__dialog-new-game"
-      title="Начать новую игру"
-      :buttons="[
-        { id: 1, text: 'OK', onClick: resetGame },
-        { id: 2, text: 'Отмена', onClick: close },
-      ]"
-      ref="baseDialog"
-    >
-      <p class="page-sudoku__dialog-new-game-description">Прогресс текущей игры будет потерян</p>
-    </BaseDialog>
+    <SudokuWinningDialog ref="sudokuWinningDialog" />
+    <SudokuNewGameDialog ref="sudokuNewGameDialog" />
+    <SudokuLeaveConfirmationDialog ref="sudokuLeaveConfirmationDialog" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef, watch, onBeforeUnmount } from 'vue';
-import { onBeforeRouteLeave, useRoute } from 'vue-router';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
@@ -79,52 +68,25 @@ import { useTimePassed } from '@/composables/useTimePassed';
 import { format } from 'date-fns';
 import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
-import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
+import SudokuWinningDialog from './components/SudokuWinningDialog.vue';
+import SudokuNewGameDialog from './components/SudokuNewGameDialog.vue';
+import SudokuLeaveConfirmationDialog from './components/SudokuLeaveConfirmationDialog.vue';
 import { mdiTimerOutline } from '@mdi/js';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const baseDialog = useTemplateRef('baseDialog');
-const newDifficulty = ref();
+const sudokuWinningDialog = useTemplateRef('sudokuWinningDialog');
+const sudokuNewGameDialog = useTemplateRef('sudokuNewGameDialog');
+const sudokuLeaveConfirmationDialog = useTemplateRef('sudokuLeaveConfirmationDialog');
 
-const open = () => {
-  baseDialog.value?.open();
-};
-
-const close = () => {
-  baseDialog.value?.close();
+const openWinningModal = () => {
+  sudokuWinningDialog.value?.openDialog();
 };
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
 const formattedTime = computed(() => format(new Date(timePassed.value ?? 0), 'mm:ss'));
-
-const hasProgress = computed(() =>
-  model.value.some((row, rowIndex) =>
-    row?.some((cell, colIndex) =>
-      sudokuStore.sudoku.puzzle[rowIndex] ? cell !== sudokuStore.sudoku.puzzle[rowIndex][colIndex] : false,
-    ),
-  ),
-);
-
-const loadNewGame = async (difficulty: Difficulty) => {
-  const sudoku = await sudokuStore.getSudoku(difficulty);
-
-  model.value = [...sudoku.puzzle];
-  reset();
-  stop();
-};
-
-const resetGame = async () => {
-  if (!newDifficulty.value) {
-    return;
-  }
-
-  await loadNewGame(newDifficulty.value);
-  newDifficulty.value = null;
-  close();
-};
 
 const onFocus = (event: FocusEvent) => {
   const input = event.target as HTMLInputElement;
@@ -153,7 +115,7 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
   sudokuStore.getValidateSudoku(model.value).then((validationResult) => {
     if (validationResult.isWin) {
-      open();
+      openWinningModal();
       stop();
     }
   });
@@ -165,50 +127,48 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
 watch(
   () => route.query.difficulty,
-  async () => {
+  () => {
     const difficulty = route.query.difficulty;
 
     if (!isDifficulty(difficulty)) {
       return goToPage404();
     }
 
-    if (hasProgress.value) {
-      newDifficulty.value = difficulty;
-      open();
-    } else {
-      await loadNewGame(difficulty as Difficulty);
-    }
+    sudokuStore.getSudoku(difficulty).then((sudoku) => {
+      model.value = sudoku.puzzle;
+      reset();
+    });
   },
   { immediate: true },
 );
 
-onBeforeRouteLeave((to, from, next) => {
-  const answer = window.confirm('Вы действительно хотите уйти? У вас есть несохраненные изменения!');
+onBeforeRouteUpdate(async (to, from, next) => {
+  if (to.query.difficulty) {
+    const isConfirmedNewGameDialog = await sudokuNewGameDialog.value?.openDialog();
 
-  if (answer) {
+    if (isConfirmedNewGameDialog) {
+      next();
+    } else {
+      next(false);
+    }
+
+    return;
+  }
+});
+
+onBeforeRouteLeave(async (to, from, next) => {
+  const isConfirmedLeaveDialog = await sudokuLeaveConfirmationDialog.value?.openDialog();
+
+  if (isConfirmedLeaveDialog) {
     next();
   } else {
     next(false);
   }
 });
 
-const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-  if (hasProgress.value) {
-    event.preventDefault();
-    event.returnValue = '';
-  }
-};
-
-watch(hasProgress, (progress) => {
-  if (progress) {
-    window.addEventListener('beforeunload', handleBeforeUnload);
-  } else {
-    window.removeEventListener('beforeunload', handleBeforeUnload);
-  }
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('beforeunload', handleBeforeUnload);
+window.addEventListener('beforeunload', (event) => {
+  event.preventDefault();
+  event.returnValue = '';
 });
 </script>
 
@@ -238,18 +198,6 @@ onBeforeUnmount(() => {
         color: var(--color-blue-500);
       }
     }
-  }
-
-  .page-sudoku__dialog-new-game {
-    max-width: 400px;
-    max-height: 200px;
-  }
-
-  .page-sudoku__dialog-new-game-description {
-    all: unset;
-    padding-bottom: 10px;
-    color: var(--color-zinc-700);
-    font-weight: 400;
   }
 
   .page-sudoku__buttons {
