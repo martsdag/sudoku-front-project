@@ -7,6 +7,7 @@
       { id: 2, text: 'Отмена', onClick: onClickCancel },
     ]"
     ref="baseDialog"
+    @close="onClickClose"
   >
     <p class="page-sudoku__dialog-confirmation-description">Прогресс текущей игры будет потерян.</p>
   </BaseDialog>
@@ -29,6 +30,10 @@ const onClickOk = () => {
 const onClickCancel = () => {
   cancel();
   baseDialog.value?.close();
+};
+
+const onClickClose = () => {
+  cancel();
 };
 
 const reveal = async () => {
