@@ -142,33 +142,47 @@ watch(
   { immediate: true },
 );
 
+const hasProgress = computed(() =>
+  model.value.some((row, rowIndex) =>
+    row?.some((cell, colIndex) =>
+      sudokuStore.sudoku.puzzle[rowIndex] ? cell !== sudokuStore.sudoku.puzzle[rowIndex][colIndex] : false,
+    ),
+  ),
+);
+
 onBeforeRouteUpdate(async (to, from, next) => {
-  if (to.query.difficulty) {
-    const isConfirmedNewGameDialog = await sudokuNewGameDialog.value?.openDialog();
-
-    if (isConfirmedNewGameDialog) {
-      next();
-    } else {
-      next(false);
-    }
-
+  if (to.name === RouteName.Sudoku && !to.query.difficulty) {
     return;
   }
-});
 
-onBeforeRouteLeave(async (to, from, next) => {
-  const isConfirmedLeaveDialog = await sudokuLeaveConfirmationDialog.value?.openDialog();
+  const isConfirmedNewGameDialog = await sudokuNewGameDialog.value?.reveal();
 
-  if (isConfirmedLeaveDialog) {
+  if (isConfirmedNewGameDialog) {
     next();
   } else {
     next(false);
   }
 });
 
+onBeforeRouteLeave(async (to, from, next) => {
+  if (hasProgress.value) {
+    const isConfirmedLeaveDialog = await sudokuLeaveConfirmationDialog.value?.reveal();
+
+    if (isConfirmedLeaveDialog) {
+      next();
+    } else {
+      next(false);
+    }
+  } else {
+    next();
+  }
+});
+
 window.addEventListener('beforeunload', (event) => {
-  event.preventDefault();
-  event.returnValue = '';
+  if (window.location.pathname === '/sudoku') {
+    event.preventDefault();
+    event.returnValue = '';
+  }
 });
 </script>
 

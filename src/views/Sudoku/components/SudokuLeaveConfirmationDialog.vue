@@ -3,8 +3,8 @@
     class="page-sudoku__dialog-confirmation"
     title="Действительно ли Вы хотите покинуть данную страницу?"
     :buttons="[
-      { id: 1, text: 'OK', onClick: onConfirm },
-      { id: 2, text: 'Отмена', onClick: onCancel },
+      { id: 1, text: 'OK', onClick: onClickOk },
+      { id: 2, text: 'Отмена', onClick: onClickCancel },
     ]"
     ref="baseDialog"
   >
@@ -19,28 +19,28 @@ import { useTemplateRef } from 'vue';
 
 const baseDialog = useTemplateRef('baseDialog');
 
-const { reveal, confirm, cancel } = useConfirmDialog();
+const { reveal: _reveal, confirm, cancel } = useConfirmDialog();
 
-const onConfirm = () => {
+const onClickOk = () => {
   confirm();
   baseDialog.value?.close();
 };
 
-const onCancel = () => {
+const onClickCancel = () => {
   cancel();
   baseDialog.value?.close();
 };
 
-const openDialog = async () => {
+const reveal = async () => {
   baseDialog.value?.open();
 
-  const { isCanceled } = await reveal();
+  const { isCanceled } = await _reveal();
 
   return !isCanceled;
 };
 
 defineExpose({
-  openDialog,
+  reveal,
 });
 </script>
 
