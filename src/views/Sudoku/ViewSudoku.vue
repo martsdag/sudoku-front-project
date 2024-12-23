@@ -47,42 +47,45 @@
         {{ difficulty }}
       </RouterLink>
     </div>
-    <BaseDialog :buttons="[{ id: 0, text: 'OK', onClick: close }]" ref="baseDialog">
-      <img src="/src/assets/images/victory.jpg" alt="Victory image" />
-    </BaseDialog>
+    <DialogIsWin ref="dialogIsWin " />
+    <DialogConfirmation
+      :title="'Ваш прогресс будет утерян'"
+      :message="'Если вы покинете страницу или смените сложность, текущая игра будет сброшена. Подтвердите действие.'"
+      ref="dialogConfirmation"
+      @confirm="confirm"
+      @cancel="cancel"
+      @close="cancel"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 import { Difficulty, type Sudoku } from '@/api/sudoku';
 import { useSudokuStore } from '@/stores/sudoku';
 import { isDifficulty } from '@/helpers/isDifficulty';
 import { BUTTON } from '@/helpers/ui';
 import { goToPage404 } from '@/composables/goToPage404';
+import { useTimePassed } from '@/composables/useTimePassed';
 import { RouteName } from '@/router';
 import { isNil } from '@/utils/isNil';
-import { useTimePassed } from '@/composables/useTimePassed';
 import { format } from 'date-fns';
 import BaseIcon from '@/components/BaseIcon/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
-import BaseDialog from '@/components/BaseDialog/BaseDialog.vue';
+import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { mdiTimerOutline } from '@mdi/js';
+import { useConfirmDialog, useEventListener, useToggle } from '@vueuse/core';
+import DialogIsWin from '@/components/DialogIsWin.vue';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
-const baseDialog = useTemplateRef('baseDialog');
+const dialogConfirmation = useTemplateRef('dialogConfirmation');
+const dialogIsWin = useTemplateRef('dialogIsWin ');
 
-const open = () => {
-  baseDialog.value?.open();
-};
-
-const close = () => {
-  baseDialog.value?.close();
-};
+const { reveal, confirm, cancel } = useConfirmDialog();
 
 const { timePassed, start, reset, stop, isActive } = useTimePassed();
 
@@ -113,10 +116,13 @@ const onInput = (event: Event, [rowIndex, colIndex]: [number, number]) => {
 
   row[colIndex] = sanitizedValue === '' ? '-' : sanitizedValue;
 
+  toggleHasChanges(true);
+
   sudokuStore.getValidateSudoku(model.value).then((validationResult) => {
-    if (validationResult.isWin) {
-      open();
+    if (!validationResult.isWin) {
+      return;
     }
+    dialogIsWin.value?.openDialog();
   });
 
   nextTick(() => {
@@ -135,11 +141,59 @@ watch(
 
     sudokuStore.getSudoku(difficulty).then((sudoku) => {
       model.value = sudoku.puzzle;
+
+      toggleHasChanges(false);
       reset();
     });
   },
   { immediate: true },
 );
+
+const [hasChanges, toggleHasChanges] = useToggle();
+
+onBeforeRouteUpdate(async (to, from, next) => {
+  if (!to.query.difficulty) {
+    return;
+  }
+
+  if (!hasChanges.value) {
+    return next();
+  }
+
+  dialogConfirmation.value?.open();
+
+  const { isCanceled } = await reveal();
+
+  if (isCanceled) {
+    return next(false);
+  }
+
+  next();
+});
+
+onBeforeRouteLeave(async (to, from, next) => {
+  if (!hasChanges.value) {
+    return next();
+  }
+
+  dialogConfirmation.value?.open();
+
+  const { isCanceled } = await reveal();
+
+  if (isCanceled) {
+    return next(false);
+  }
+
+  next();
+});
+
+useEventListener('beforeunload', (event) => {
+  if (!hasChanges.value) {
+    return;
+  }
+
+  event.preventDefault();
+});
 </script>
 
 <style>
