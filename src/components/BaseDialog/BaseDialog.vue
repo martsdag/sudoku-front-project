@@ -131,8 +131,8 @@ defineExpose({
 .dialog {
   border-width: 1px;
   border-color: var(--color-blue-500);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  outline: 0.125rem solid transparent;
+  outline-offset: 0.125rem;
   border-radius: 0.5rem;
   background-color: var(--color-white);
   margin: auto !important;
@@ -171,7 +171,7 @@ defineExpose({
     &:hover {
       color: var(--color-blue-950);
       background-color: var(--color-zinc-200);
-      border-radius: 20px;
+      border-radius: 1.5rem;
     }
 
     &:focus {
