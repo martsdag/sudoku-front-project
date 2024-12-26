@@ -21,12 +21,26 @@
   </dialog>
 </template>
 
+<i18n lang="json">
+{
+  "En": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "Ru": {
+    "confirm": "Подтвердить",
+    "cancel": "Отмена"
+  }
+}
+</i18n>
+
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } from 'vue';
 import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { isNotNil } from '@/utils/isNotNil';
 import type { FunctionCallback } from '@/types';
+import { useI18n } from 'vue-i18n';
 
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/BaseButton'));
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/BaseIcon'));
@@ -59,12 +73,14 @@ const emit = defineEmits<{
   cancel: [];
 }>();
 
+const { t } = useI18n({ useScope: 'local' });
+
 const buttons = computed(
   () =>
     props.buttons ?? [
       {
         id: 0,
-        text: 'cancel',
+        text: t('cancel'),
         onClick: () => {
           emit('cancel');
           close();
@@ -72,7 +88,7 @@ const buttons = computed(
       },
       {
         id: 1,
-        text: 'confirm',
+        text: t('confirm'),
         onClick: () => {
           emit('confirm');
           close();

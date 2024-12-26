@@ -11,3 +11,8 @@ export type Nil = null | undefined;
 export type AddTypeForFields<Object extends object, Keys extends keyof Object, AdditionalType> = {
   [Key in keyof Object]: Key extends Keys ? Object[Key] | AdditionalType : Object[Key];
 };
+
+export enum Language {
+  Ru = 'Ru',
+  En = 'En',
+}

@@ -21,11 +21,12 @@
     "ofetch": "^1.4.1",
     "pinia": "^2.2.4",
     "vue": "^3.5.12",
-    "vue-i18n": "^10.0.4",
+    "vue-i18n": "^10.0.5",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
+    "@intlify/unplugin-vue-i18n": "^6.0.2",
     "@stylistic/eslint-plugin": "^2.9.0",
     "@types/node": "^22.7.6",
     "@vitejs/plugin-vue": "^5.1.4",

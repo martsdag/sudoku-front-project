@@ -8,17 +8,59 @@
           </RouterLink>
         </li>
       </ul>
+      <ul class="header__language-switcher">
+        <li class="header__language-switcher__buttons-container">
+          <BaseButton
+            v-for="lang in languages"
+            :class="[$i18n.locale === lang.value && BUTTON.ACTIVE]"
+            :key="lang.value"
+            @click="setLanguage(lang.value)"
+          >
+            {{ lang.label }}
+          </BaseButton>
+        </li>
+      </ul>
     </div>
   </header>
 </template>
 
-<script setup lang="ts">
-import { RouteName } from '@/router';
+<i18n lang="json">
+{
+  "En": {
+    "mainPage": "Home",
+    "sudoku": "Sudoku"
+  },
+  "Ru": {
+    "mainPage": "Главная",
+    "sudoku": "Судоку"
+  }
+}
+</i18n>
 
-const links = [
-  { text: 'Главная', to: { name: RouteName.Home } },
-  { text: 'Судоку', to: { name: RouteName.Sudoku } },
+<script setup lang="ts">
+import BaseButton from '@/components/BaseButton';
+import { RouteName } from '@/router';
+import { useI18n } from 'vue-i18n';
+import { i18n } from '@/i18n';
+import { BUTTON } from '@/helpers/ui';
+import { computed } from 'vue';
+import { Language } from '@/types';
+
+const languages = [
+  { label: 'EN', value: Language.En },
+  { label: 'RU', value: Language.Ru },
 ];
+
+const setLanguage = (language: Language) => {
+  i18n.global.locale.value = language;
+};
+
+const { t } = useI18n({ useScope: 'local' });
+
+const links = computed(() => [
+  { text: t('mainPage'), to: { name: RouteName.Home } },
+  { text: t('sudoku'), to: { name: RouteName.Sudoku } },
+]);
 </script>
 
 <style>
@@ -65,6 +107,20 @@ const links = [
     &.header__link--active {
       font-weight: bold;
       color: var(--color-blue-500);
+    }
+  }
+
+  .header__language-switcher {
+    font-size: 1.125rem;
+    margin-inline-start: auto;
+    display: flex;
+    gap: 0.25rem;
+    padding: 0;
+
+    .header__language-switcher__buttons-container {
+      flex-direction: row;
+      display: flex;
+      gap: 0.5rem;
     }
   }
 }
