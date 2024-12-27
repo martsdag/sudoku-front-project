@@ -33,6 +33,7 @@ import { RouteName } from '@/router';
 .page-404__subtitle {
   font-size: 2rem;
   margin-bottom: 0%;
+  text-align: center;
 }
 
 .page-404__description {
