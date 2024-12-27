@@ -9,7 +9,7 @@
         </li>
       </ul>
       <ul class="header__language-switcher">
-        <li class="header__language-switcher__buttons-container">
+        <li class="header__language-switcher-buttons">
           <BaseButton
             v-for="lang in languages"
             :class="[$i18n.locale === lang.value && BUTTON.ACTIVE]"
@@ -117,7 +117,7 @@ const links = computed(() => [
     gap: 0.25rem;
     padding: 0;
 
-    .header__language-switcher__buttons-container {
+    .header__language-switcher-buttons {
       flex-direction: row;
       display: flex;
       gap: 0.5rem;
