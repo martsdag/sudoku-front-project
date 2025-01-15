@@ -8,18 +8,16 @@
           </RouterLink>
         </li>
       </ul>
-      <ul class="header__language-switcher">
-        <li class="header__language-switcher-buttons">
-          <BaseButton
-            v-for="lang in languages"
-            :class="[$i18n.locale === lang.value && BUTTON.ACTIVE]"
-            :key="lang.value"
-            @click="setLanguage(lang.value)"
-          >
-            {{ lang.label }}
-          </BaseButton>
-        </li>
-      </ul>
+      <div class="header__language-switcher">
+        <BaseButton
+          v-for="language in buttons"
+          :class="[$i18n.locale === language.value && BUTTON.ACTIVE]"
+          :key="language.value"
+          @click="setLanguage(language.value)"
+        >
+          {{ language.label }}
+        </BaseButton>
+      </div>
     </div>
   </header>
 </template>
@@ -46,7 +44,7 @@ import { BUTTON } from '@/helpers/ui';
 import { computed } from 'vue';
 import { Language } from '@/types';
 
-const languages = [
+const buttons = [
   { label: 'EN', value: Language.En },
   { label: 'RU', value: Language.Ru },
 ];
@@ -115,13 +113,6 @@ const links = computed(() => [
     margin-inline-start: auto;
     display: flex;
     gap: 0.25rem;
-    padding: 0;
-
-    .header__language-switcher-buttons {
-      flex-direction: row;
-      display: flex;
-      gap: 0.5rem;
-    }
   }
 }
 </style>
