@@ -10,7 +10,7 @@
       </ul>
       <div class="header__language-button">
         <BaseButton
-          v-for="language in languages"
+          v-for="language in languagesButton"
           :class="[$i18n.locale === language.value && BUTTON.ACTIVE]"
           :key="language.value"
           @click="setLanguage(language.value)"
@@ -44,7 +44,7 @@ import { BUTTON } from '@/helpers/ui';
 import { computed } from 'vue';
 import { Language } from '@/types';
 
-const languages = [
+const languagesButton = [
   { label: 'EN', value: Language.En },
   { label: 'RU', value: Language.Ru },
 ];
