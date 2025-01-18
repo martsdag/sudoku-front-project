@@ -10,12 +10,12 @@
       </ul>
       <div class="header__language-button">
         <BaseButton
-          v-for="language in languagesButton"
-          :class="[$i18n.locale === language.value && BUTTON.ACTIVE]"
-          :key="language.value"
-          @click="setLanguage(language.value)"
+          v-for="languageButton in languagesButtons"
+          :class="[$i18n.locale === languageButton.value && BUTTON.ACTIVE]"
+          :key="languageButton.value"
+          @click="setLanguage(languageButton.value)"
         >
-          {{ language.label }}
+          {{ languageButton.label }}
         </BaseButton>
       </div>
     </div>
@@ -44,7 +44,7 @@ import { BUTTON } from '@/helpers/ui';
 import { computed } from 'vue';
 import { Language } from '@/types';
 
-const languagesButton = [
+const languagesButtons = [
   { label: 'EN', value: Language.En },
   { label: 'RU', value: Language.Ru },
 ];
