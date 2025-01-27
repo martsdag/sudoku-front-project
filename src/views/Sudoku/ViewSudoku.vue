@@ -44,13 +44,13 @@
         :class="[BUTTON.default, difficulty === route.query.difficulty && BUTTON.ACTIVE]"
         :key="difficulty"
       >
-        {{ difficulty }}
+        {{ t(`difficulty.${difficulty}`) }}
       </RouterLink>
     </div>
     <DialogIsWin ref="dialogIsWin " />
     <DialogConfirmation
-      :title="'Ваш прогресс будет утерян'"
-      :message="'Если вы покинете страницу или смените сложность, текущая игра будет сброшена. Подтвердите действие.'"
+      :title="t('gameReset')"
+      :message="t('gameResetDescription')"
       ref="dialogConfirmation"
       @confirm="confirm"
       @cancel="cancel"
@@ -58,6 +58,31 @@
     />
   </div>
 </template>
+
+<i18n lang="json">
+{
+  "En": {
+    "gameReset": "Your progress will be lost",
+    "gameResetDescription": "If you leave the page or change the difficulty, the current game will be reset. Confirm the action.",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "expert": "Expert"
+    }
+  },
+  "Ru": {
+    "gameReset": "Ваш прогресс будет утерян",
+    "gameResetDescription": "Если вы покинете страницу или смените сложность, текущая игра будет сброшена. Подтвердите действие.",
+    "difficulty": {
+      "easy": "Легкий",
+      "medium": "Средний",
+      "hard": "Сложный",
+      "expert": "Эксперт"
+    }
+  }
+}
+</i18n>
 
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
@@ -78,12 +103,15 @@ import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { mdiTimerOutline } from '@mdi/js';
 import { useConfirmDialog, useEventListener, useToggle } from '@vueuse/core';
 import DialogIsWin from '@/components/DialogIsWin.vue';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const sudokuStore = useSudokuStore();
 const model = ref<Sudoku['puzzle']>([]);
 const dialogConfirmation = useTemplateRef('dialogConfirmation');
 const dialogIsWin = useTemplateRef('dialogIsWin ');
+
+const { t } = useI18n({ useScope: 'local' });
 
 const { reveal, confirm, cancel } = useConfirmDialog();
 
